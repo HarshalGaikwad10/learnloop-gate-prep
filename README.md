@@ -1,70 +1,182 @@
-# Getting Started with Create React App
+# LearnLoop AI — GATE Civil Engineering Preparation
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> **Engineering Minds. Structuring Futures.**
 
-## Available Scripts
+LearnLoop AI is an AI-powered learning platform designed to support students preparing for the GATE Civil Engineering examination. It combines topic-wise practice questions, revision support, performance-based learning, and an AI chatbot to help students understand engineering concepts and prepare more effectively.
 
-In the project directory, you can run:
+🌐 **Live Demo:** [LearnLoop AI](https://learnloop-gate-prep.vercel.app/)
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🚀 Key Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Topic-Wise Practice:** Practice GATE-level multiple-choice questions organized by subject and topic.
+- **Curated Question Bank:** Access a collection of 287 GATE-level MCQs.
+- **AI-Powered Tutor:** Ask questions, clarify concepts, and receive explanations through a conversational Gemini-powered chatbot.
+- **Concept Learning:** Explore prewritten study notes for supported topics.
+- **Performance Tracking:** Review test results and monitor performance across topics.
+- **Smart Revision Support:** Get revision recommendations based on quiz performance and topic-level learning progress.
+- **Revision Planning:** Generate a revision plan to help organize preparation.
+- **Interactive Dashboard:** Navigate subjects, topics, tests, notes, and learning tools through a unified interface.
+- **Dark Mode:** Study using a dark-themed interface.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🛠️ Tech Stack
 
-### `npm run build`
+| Technology | Purpose |
+| :--- | :--- |
+| **React.js** | Frontend application |
+| **JavaScript** | Application logic |
+| **Recharts** | Data visualization |
+| **Google Gemini API** | AI tutoring and revision assistance |
+| **Vercel** | Hosting and serverless API deployment |
+| **Google Fonts** | Typography using Outfit and DM Sans |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 📚 Subject Coverage
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The curated question bank includes topics from **Concrete Technology**, including:
+- Water-Cement Ratio
+- Workability
+- Hydration of Cement
+- Compressive Strength
+- Admixtures
+- Durability of Concrete
 
-### `npm run eject`
+The platform is designed to support the expansion of subjects and topics relevant to GATE Civil Engineering.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🧠 AI Chatbot
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+LearnLoop AI includes a conversational learning assistant powered by the Google Gemini API.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The chatbot is designed to help students:
+- Understand civil engineering concepts in simple language.
+- Work through numerical problems step by step.
+- Understand MCQ answers and hints.
+- Ask follow-up questions during a learning session.
+- Clarify doubts while preparing for examinations.
 
-## Learn More
+The chatbot uses a server-side API endpoint (`/api/chat`) so that the Gemini API key remains outside the frontend code.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## ⚙️ Getting Started
 
-### Code Splitting
+### Prerequisites
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Make sure you have the following installed:
+- [Node.js](https://nodejs.org/) (v18+)
+- `npm`
+- A Google Gemini API key
+- [Vercel CLI](https://vercel.com/docs/cli) for local serverless API testing
 
-### Analyzing the Bundle Size
+### 1. Clone the repository
+```bash
+git clone https://github.com/HarshalGaikwad10/learnloop-gate-prep.git
+cd learnloop-gate-prep
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 2. Install dependencies
+```bash
+npm install
+```
 
-### Making a Progressive Web App
+### 3. Configure environment variables
+Create a `.env` file in the project root and add your Gemini API key:
+```env
+GEMINI_API_KEY=your_gemini_api_key
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+> [!IMPORTANT]
+> **Security:** Never commit your `.env` file or expose your API key in frontend code. Ensure `.env` is included in `.gitignore`.
 
-### Advanced Configuration
+### 4. Run the application
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+For frontend development without serverless API routes:
+```bash
+npm start
+```
 
-### Deployment
+To test the application with its Vercel serverless API endpoint, use:
+```bash
+npx vercel dev
+```
+Follow the Vercel CLI prompts if required.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+## 📁 Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The project follows a React application structure with a serverless API endpoint:
+
+```
+learnloop-gate-prep/
+├── api/
+│   └── chat.js
+├── public/
+├── src/
+│   ├── components/
+│   │   └── Chatbot.jsx
+│   ├── services/
+│   │   └── chatService.js
+│   ├── styles/
+│   │   └── chatbot.css
+│   ├── App.js
+│   ├── App.test.js
+│   ├── index.js
+│   └── ...
+├── .gitignore
+├── package.json
+└── README.md
+```
+
+---
+
+## 🌐 Deployment
+
+LearnLoop AI is hosted on [Vercel](https://vercel.com/).
+
+To deploy:
+1. Push the latest code to the connected GitHub repository.
+2. Import or connect the repository to Vercel.
+3. Configure `GEMINI_API_KEY` in the Vercel project environment variables (**Settings → Environment Variables**).
+4. Deploy the application and verify the chatbot API endpoint.
+
+> [!NOTE]
+> Environment variables configured on your local machine are not automatically transferred to Vercel.
+
+---
+
+## 🎯 Project Objective
+
+The objective of LearnLoop AI is to make GATE Civil Engineering preparation more organized, interactive, and accessible by combining structured practice with AI-assisted learning.
+
+The project aims to encourage concept-based understanding, consistent revision, and performance-aware preparation rather than relying solely on memorization.
+
+---
+
+## 🔮 Future Scope
+
+Potential future improvements include:
+- Expanded question banks across all GATE Civil Engineering subjects.
+- Personalized study schedules and revision reminders.
+- Long-term progress tracking and data persistence.
+- Topic-wise analytics and performance insights.
+- Previous-year question analysis.
+- More advanced AI tutoring and personalized learning recommendations.
+
+---
+
+## 👨‍💻 Developer
+
+LearnLoop AI is developed under **StructaMind**, with a focus on applying AI and modern web technologies to engineering education.
+
+---
+
+## 📄 License
+
+No license has been specified yet. Unless a license is added to this repository, reuse and redistribution remain subject to the applicable copyright rules.
