@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
+import Chatbot from "./components/Chatbot";
 
 // ─── FONTS ───────────────────────────────────────────────────────────────────
 const loadFonts = () => {
@@ -538,6 +539,15 @@ export default function App() {
   const [gateYear,setGateYear] = useState(null);
   const [showYearPicker,setShowYearPicker] = useState(false);
 
+  // ── ACTIVE CHATBOT CONTEXT ────────────────────────────────────────────────
+  const activeChatContext = {
+    gateYear,
+    topicName: topic?.name || null,
+    currentQuestion: (screen === "test" && qs && qs[curQ]) ? { q: qs[curQ].q, options: qs[curQ].options, hint: qs[curQ].hint } : null,
+    recentScore: (screen === "result" && score !== null && topic) ? { score, total: qs.length, pct: Math.round((score/qs.length)*100), topic: topic.name } : null,
+    activeNotes: (screen === "notes" && topic) ? NOTES[topic.id] : null,
+  };
+
   const th = T[dark?"dark":"light"];
   useEffect(loadFonts,[]);
 
@@ -659,7 +669,7 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
 
     try{
       const apiKey = process.env.REACT_APP_GEMINI_KEY;
-      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,{
+      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
@@ -1055,6 +1065,7 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
           )}
         </div>
         <style>{`@keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}`}</style>
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
       </div>
     );
   }
@@ -1139,6 +1150,7 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
             </div>
           </div>
         </div>
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
       </div>
     );
   }
@@ -1159,6 +1171,7 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
             </div>);})}
           </div>
         </div>
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
       </div>
     );
   }
@@ -1199,6 +1212,7 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
             })}
           </div>
         </div>
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
       </div>
     );
   }
@@ -1231,6 +1245,7 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
             <button onClick={()=>{setNoteTab("formula");setScreen("notes");}} style={btnGhost({padding:"11px",fontSize:12,textAlign:"center"})}>📐 Formula Sheet</button>
           </div>
         </div>
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
       </div>
     );
   }
@@ -1265,6 +1280,7 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
             {curQ+1<qs.length?"Next Question →":"Submit & See Results 🎯"}
           </button>
         </div>
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
       </div>
     );
   }
@@ -1321,6 +1337,7 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
             <button onClick={()=>setScreen("graph")} style={btnGhost({padding:"10px",fontSize:12,textAlign:"center"})}>📈 Progress Graph</button>
           </div>
         </div>
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
       </div>
     );
   }
@@ -1388,6 +1405,7 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
             </>
           )}
         </div>
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
       </div>
     );
   }
@@ -1414,9 +1432,10 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
           </div>
         </div>
         <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
       </div>
     );
   }
 
-  return<div style={appStyle}><Nav/><div style={{padding:40,textAlign:"center",color:th.textDim}}>Loading...</div></div>;
+  return<div style={appStyle}><Nav/><div style={{padding:40,textAlign:"center",color:th.textDim}}>Loading...</div><Chatbot dark={dark} user={user} activeContext={activeChatContext} /></div>;
 }
