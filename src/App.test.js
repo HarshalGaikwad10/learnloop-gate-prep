@@ -642,5 +642,174 @@ describe('Civil Engineering Course Catalogue & Demo Course Showcase', () => {
   });
 });
 
+describe('Visual Learning Mode for Unit 2 (Water Treatment Units)', () => {
+  const VisualLearningSection = require('./components/academy/VisualLearningSection').default;
+
+  test('VisualLearningSection renders process diagram, tabs, and topic title for les-2-1', () => {
+    render(
+      <VisualLearningSection
+        lessonId="les-2-1"
+        lessonTitle="Treatment Flowsheet, Screening & Aeration"
+        dark={true}
+      />
+    );
+
+    // Header & Section Elements
+    expect(screen.getByTestId('visual-learning-section')).toBeInTheDocument();
+    expect(screen.getByText(/Visual Learning Mode/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Municipal Water Treatment Flowsheet & Cascade Aerator/i })).toBeInTheDocument();
+
+    // Tab buttons
+    expect(screen.getByRole('tab', { name: /Process Diagram/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Step-by-Step Breakdown/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Engineering Graph/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Worked Calculation/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Explore Further/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /AI Concept Visualizer/i })).toBeInTheDocument();
+
+    // Default tab is Diagram: SVG role img should be present
+    expect(screen.getByRole('img', { name: /Municipal Water Treatment and Cascade Aerator/i })).toBeInTheDocument();
+  });
+
+  test('Step-by-step breakdown toggles between Simple and Technical explanations', () => {
+    render(
+      <VisualLearningSection
+        lessonId="les-2-2"
+        lessonTitle="Coagulation & Flocculation Chemistry & Design"
+        dark={true}
+      />
+    );
+
+    // Switch to Step-by-Step tab
+    fireEvent.click(screen.getByRole('tab', { name: /Step-by-Step Breakdown/i }));
+
+    // Both should be visible initially (Side-by-side mode)
+    expect(screen.getByText(/Simple Language & Physical Intuition/i)).toBeInTheDocument();
+    expect(screen.getByText(/Technical Civil Engineering Specification/i)).toBeInTheDocument();
+    expect(screen.getByText(/Flash Coagulant Dispersion/i)).toBeInTheDocument();
+
+    // Click Simple Language only
+    fireEvent.click(screen.getByRole('button', { name: /Simple Language/i }));
+    expect(screen.getByText(/Simple Language & Physical Intuition/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Technical Civil Engineering Specification/i)).not.toBeInTheDocument();
+
+    // Click Technical only
+    fireEvent.click(screen.getByRole('button', { name: /^Technical Engineering$/i }));
+    expect(screen.queryByText(/Simple Language & Physical Intuition/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/Technical Civil Engineering Specification/i)).toBeInTheDocument();
+  });
+
+  test('Engineering Graph tab renders Recharts container and key GATE CE takeaway', () => {
+    render(
+      <VisualLearningSection
+        lessonId="les-2-3"
+        lessonTitle="Sedimentation Basin & Clariflocculator Design"
+        dark={true}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('tab', { name: /Engineering Graph/i }));
+
+    expect(screen.getByRole('heading', { name: /Particle Settling Velocity & Removal Efficiency/i })).toBeInTheDocument();
+    expect(screen.getByText(/Key GATE CE Takeaway:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Engineering Interpretation:/i)).toBeInTheDocument();
+  });
+
+  test('Worked Calculation tab renders problem statement, given data, and final answer', () => {
+    render(
+      <VisualLearningSection
+        lessonId="les-2-4"
+        lessonTitle="Filtration: Rapid & Slow Sand Hydraulics"
+        dark={true}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('tab', { name: /Worked Calculation/i }));
+
+    expect(screen.getByText(/Expanded Bed Depth Calculation during Backwashing/i)).toBeInTheDocument();
+    expect(screen.getByText(/Problem Statement:/i)).toBeInTheDocument();
+    expect(screen.getByText(/GIVEN DATA \(WITH UNITS\):/i)).toBeInTheDocument();
+    expect(screen.getByText(/Expanded Bed Depth L_exp = 1.27 m/i)).toBeInTheDocument();
+  });
+
+  test('Explore Further tab contains valid, safe Google and YouTube external links', () => {
+    render(
+      <VisualLearningSection
+        lessonId="les-2-5"
+        lessonTitle="Disinfection Kinetics & Breakpoint Chlorination"
+        dark={true}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('tab', { name: /Explore Further/i }));
+
+    const googleLink = screen.getByRole('link', { name: /Search on Google/i });
+    expect(googleLink).toBeInTheDocument();
+    expect(googleLink).toHaveAttribute('target', '_blank');
+    expect(googleLink).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(googleLink.getAttribute('href')).toContain('https://www.google.com/search?q=');
+    expect(googleLink.getAttribute('href')).toContain('breakpoint');
+
+    const youtubeLink = screen.getByRole('link', { name: /Watch Videos on YouTube/i });
+    expect(youtubeLink).toBeInTheDocument();
+    expect(youtubeLink).toHaveAttribute('target', '_blank');
+    expect(youtubeLink).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(youtubeLink.getAttribute('href')).toContain('https://www.youtube.com/results?search_query=');
+  });
+
+  test('Safely returns null when no visual data is available for a lesson', () => {
+    const { container } = render(
+      <VisualLearningSection
+        lessonId="non-existent-lesson-id"
+        lessonTitle="Unknown Topic"
+        dark={true}
+      />
+    );
+
+    expect(container.firstChild).toBeNull();
+  });
+
+  test('Collapses and expands visual section on header click', () => {
+    render(
+      <VisualLearningSection
+        lessonId="les-2-1"
+        lessonTitle="Treatment Flowsheet, Screening & Aeration"
+        dark={true}
+      />
+    );
+
+    // Initial state: expanded
+    expect(screen.getByRole('tab', { name: /Process Diagram/i })).toBeInTheDocument();
+
+    // Click collapse button
+    fireEvent.click(screen.getByRole('button', { name: /Collapse/i }));
+
+    // Tabs should be hidden while header stays
+    expect(screen.queryByRole('tab', { name: /Process Diagram/i })).not.toBeInTheDocument();
+    expect(screen.getByText(/Expand Visuals/i)).toBeInTheDocument();
+
+    // Click expand again
+    fireEvent.click(screen.getByText(/Expand Visuals/i));
+    expect(screen.getByRole('tab', { name: /Process Diagram/i })).toBeInTheDocument();
+  });
+
+  test('AI Concept Visualizer displays action button and engineering disclaimer', () => {
+    render(
+      <VisualLearningSection
+        lessonId="les-2-6"
+        lessonTitle="Water Softening & Advanced Membrane Treatment"
+        dark={true}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('tab', { name: /AI Concept Visualizer/i }));
+
+    expect(screen.getByRole('button', { name: /Generate Concept Image/i })).toBeInTheDocument();
+    expect(screen.getByText(/Pedagogical Visualization Notice:/i)).toBeInTheDocument();
+    expect(screen.getByText(/constitute verified civil engineering designs/i)).toBeInTheDocument();
+  });
+});
+
+
 
 

@@ -160,3 +160,51 @@ function generateLocalRubricFeedback(answer, rubric, language = 'English') {
     recommendedAction: status === 'understood' ? 'continue' : 'retry'
   };
 }
+
+/**
+ * Optional AI Concept Illustration Generator
+ * Communicates with server-side /api/chat keeping keys secure
+ */
+export async function generateConceptIllustration({ lessonTitle, topic, prompt }) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+  try {
+    const payload = {
+      action: 'generate_concept_illustration',
+      lessonTitle: lessonTitle || topic,
+      topic,
+      prompt: prompt || `Civil engineering process schematic for ${topic}`
+    };
+
+    const response = await fetch(API_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      return {
+        success: false,
+        fallback: true,
+        message: data.error || 'Server endpoint returned an error. Using high-fidelity SVG fallback.',
+        disclaimer: 'Illustrative concept visualization only — not a verified civil engineering design.'
+      };
+    }
+
+    return data;
+  } catch (err) {
+    clearTimeout(timeoutId);
+    return {
+      success: false,
+      fallback: true,
+      message: 'Network timeout communicating with concept visualizer. Using high-fidelity SVG fallback.',
+      disclaimer: 'Illustrative concept visualization only — not a verified civil engineering design.'
+    };
+  }
+}
+

@@ -369,9 +369,48 @@ EVALUATION INSTRUCTIONS:
       // Fallback gracefully
       return res.status(200).json(evaluateFallback(studentAnswer, rubric));
     }
+  // ── ROUTE 2: AI CONCEPT ILLUSTRATION (Visual Learning Mode) ──
+  if (body.action === 'generate_concept_illustration') {
+    const { lessonTitle, topic } = body;
+
+    if (!apiKey) {
+      return res.status(200).json({
+        success: false,
+        fallback: true,
+        message: 'GEMINI_API_KEY is not configured on the server. Utilizing high-fidelity SVG schematic fallback.',
+        disclaimer: 'Illustrative concept visualization only — not a verified civil engineering design.'
+      });
+    }
+
+    try {
+      const visualPrompt = `You are a Senior Civil Engineering Process Specialist. Provide a concise technical summary and component breakdown for an engineering schematic of: "${topic || lessonTitle}".
+List 3 key physical stages, primary hydraulic parameters, and critical design checks.`;
+
+      const payload = {
+        contents: [{ role: 'user', parts: [{ text: visualPrompt }] }],
+        generationConfig: { maxOutputTokens: 500, temperature: 0.3 }
+      };
+
+      const result = await callGemini(apiKey, payload);
+
+      return res.status(200).json({
+        success: true,
+        fallback: true,
+        textDescription: result.text,
+        message: `AI Visual Concept generated via ${result.model}. Displaying synchronized engineering schematic.`,
+        disclaimer: 'Illustrative concept visualization only — not a verified civil engineering design.'
+      });
+    } catch (err) {
+      return res.status(200).json({
+        success: false,
+        fallback: true,
+        message: 'AI generation service is temporarily busy. Displaying verified interactive SVG schematic fallback.',
+        disclaimer: 'Illustrative concept visualization only — not a verified civil engineering design.'
+      });
+    }
   }
 
-  // ── ROUTE 2: CONVERSATIONAL TUTOR & MULTILINGUAL TEACHING ──
+  // ── ROUTE 3: CONVERSATIONAL TUTOR & MULTILINGUAL TEACHING ──
   const { messages, context } = body;
 
   if (!Array.isArray(messages) || messages.length === 0) {

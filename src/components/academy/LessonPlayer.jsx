@@ -4,6 +4,7 @@ import { waterEngineeringCourse } from '../../data/courses/waterEngineeringCours
 import { evaluateUnderstanding, sendChatMessage } from '../../services/chatService';
 import { recordUnderstandingCheck, getStudentProgress } from '../../services/progressService';
 import FormattedContent from '../common/FormattedContent';
+import VisualLearningSection from './VisualLearningSection';
 import '../../styles/academy.css';
 
 export default function LessonPlayer({
@@ -344,6 +345,13 @@ export default function LessonPlayer({
           </div>
         )}
       </div>
+
+      {/* ── VISUAL LEARNING MODE SECTION (Unit 2 Deep Demonstration) ── */}
+      <VisualLearningSection
+        lessonId={lesson?.id}
+        lessonTitle={lesson?.title}
+        dark={dark}
+      />
 
       {/* ── SIGNATURE FEATURE: CONCEPTUAL UNDERSTANDING CHECK (Section 7) ── */}
       <div className="ll-check-container" data-testid="understanding-check-container">
