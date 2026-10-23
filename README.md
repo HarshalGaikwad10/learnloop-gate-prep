@@ -1,8 +1,12 @@
-# LearnLoop AI — GATE Civil Engineering Preparation
+# LearnLoop AI — Unified Civil Engineering Learning Platform
 
 > **Engineering Minds. Structuring Futures.**
 
-LearnLoop AI is an AI-powered learning platform designed to support students preparing for the GATE Civil Engineering examination. It combines topic-wise practice questions, revision support, performance-based learning, and an AI chatbot to help students understand engineering concepts and prepare more effectively.
+An institution-independent Civil Engineering learning platform combining structured engineering lessons, practical applications, multilingual AI tutoring, conceptual understanding checks, and relevant competitive-examination preparation.
+
+LearnLoop AI is designed to support Civil Engineering students from colleges and universities across India. It integrates foundational university curriculum with contextual competitive examination preparation (GATE Civil Engineering — CE and GATE Environmental Science & Engineering — ES) into one coherent, unified learning journey.
+
+*(Note: The initial 6-module course focuses on Water Supply, Sanitation, and Environmental Engineering; it provides structured, outcome-based engineering education and contextual examination highlights rather than claiming to cover every single university syllabus or the entire GATE examination syllabus).*
 
 🌐 **Live Demo:** [LearnLoop AI](https://learnloop-gate-prep.vercel.app/)
 
@@ -10,15 +14,15 @@ LearnLoop AI is an AI-powered learning platform designed to support students pre
 
 ## 🚀 Key Features
 
-- **Topic-Wise Practice:** Practice GATE-level multiple-choice questions organized by subject and topic.
-- **Curated Question Bank:** Access a collection of 287 GATE-level MCQs.
-- **AI-Powered Tutor:** Ask questions, clarify concepts, and receive explanations through a conversational Gemini-powered chatbot.
-- **Concept Learning:** Explore prewritten study notes for supported topics.
-- **Performance Tracking:** Review test results and monitor performance across topics.
-- **Smart Revision Support:** Get revision recommendations based on quiz performance and topic-level learning progress.
-- **Revision Planning:** Generate a revision plan to help organize preparation.
-- **Interactive Dashboard:** Navigate subjects, topics, tests, notes, and learning tools through a unified interface.
-- **Dark Mode:** Study using a dark-themed interface.
+- **Core Civil Engineering Curriculum:** Structured 6-module curriculum covering municipal water demand, water treatment units, pipe distribution hydraulics, sewage characterization, biological secondary treatment (ASP), and tertiary/sludge management.
+- **Contextual GATE CE Highlights (`🎯 Important for GATE CE`):** Selective, syllabus-verified annotations highlighting key formulas, design criteria, numerical traps, and conceptual distinctions according to the official GATE CE Section 6 (Environmental Engineering) syllabus.
+- **Preserved GATE ES Coverage:** Preserves environmental chemistry, microbial kinetics, reactor hydraulics, and water resources topics for dual-paper aspirants.
+- **Unified Learning Experience:** No segregated tracks or fragmented tabs — students learn engineering naturally with exam highlights embedded right where they matter.
+- **Multilingual AI Teacher:** Conceptual explanations with local engineering analogies in English, Hindi, Marathi, and Manipuri with technical terms and standard formulas preserved.
+- **Conceptual Understanding Checks:** Signature open-ended conceptual assessments evaluated by AI against rubric criteria with feedback on misconceptions and missing points.
+- **Mathematical & Chemical Equation Rendering:** Native KaTeX rendering with responsive KaTeX-free CSS fallbacks for fractions, radicals, Greek letters, and chemical notation.
+- **Topic-Wise Practice & Curated Question Bank:** 287 GATE-level questions with step-by-step solutions and progressive hints.
+- **Verifiable Credentials:** Outcome-based certificate qualification and tamper-proof verification.
 
 ---
 

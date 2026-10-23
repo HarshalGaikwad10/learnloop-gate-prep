@@ -1,6 +1,22 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 import Chatbot from "./components/Chatbot";
+import Navbar from "./components/Navbar";
+import CourseCatalogueView from "./components/academy/CourseCatalogueView";
+import CourseOverview from "./components/academy/CourseOverview";
+import LessonPlayer from "./components/academy/LessonPlayer";
+import ModuleAssessmentView from "./components/academy/ModuleAssessmentView";
+import FinalExamView from "./components/academy/FinalExamView";
+import CertificateView from "./components/academy/CertificateView";
+import DashboardView from "./components/academy/DashboardView";
+import ProfileView from "./components/academy/ProfileView";
+import PublicLanding from "./components/academy/PublicLanding";
+import { waterSupplyAndSanitaryCourse } from "./data/courses/waterEngineeringCourse";
+import { civilEngineeringCatalogue, getCourseById } from "./data/courses/coursesCatalogueData";
+import { getCurrentUser, loginUser, registerUser, logoutUser } from "./services/authService";
+import { sendChatMessage } from "./services/chatService";
+import FormattedContent from "./components/common/FormattedContent";
+import "./styles/academy.css";
 
 // ─── FONTS ───────────────────────────────────────────────────────────────────
 const loadFonts = () => {
@@ -506,13 +522,19 @@ function MiniCalendar({dark,th,C,year,month,gateYear}){
 }
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
-export default function App() {
+export default function App({ initialScreen = "auth" }) {
   const [dark,setDark]         = useState(true);
   const [user,setUser]         = useState(null);
   const [authMode,setAuthMode] = useState("login");
   const [form,setForm]         = useState({name:"",email:"",password:""});
   const [authErr,setAuthErr]   = useState("");
-  const [screen,setScreen]     = useState("auth");
+  const [screen,setScreen]     = useState(initialScreen);
+  const [activeTab,setActiveTab]= useState(initialScreen === "landing" ? "landing" : "practice");
+  const [academySubView,setAcademySubView] = useState("catalogue"); // 'catalogue' | 'overview' | 'lesson' | 'assessment' | 'final-exam'
+  const [selectedCourseId,setSelectedCourseId] = useState("water-sanitation-env-eng");
+  const selectedCourse = getCourseById(selectedCourseId) || waterSupplyAndSanitaryCourse;
+  const [activeModuleId,setActiveModuleId] = useState("mod-2");
+  const [activeLessonId,setActiveLessonId] = useState("les-2-1");
   const [topic,setTopic]       = useState(null);
   const [qCount,setQCount]     = useState(10);
   const [qs,setQs]             = useState([]);
@@ -540,16 +562,43 @@ export default function App() {
   const [showYearPicker,setShowYearPicker] = useState(false);
 
   // ── ACTIVE CHATBOT CONTEXT ────────────────────────────────────────────────
+  const activeLessonObj = (waterSupplyAndSanitaryCourse?.modules || [])
+    .flatMap((m) => m.lessons || [])
+    .find((l) => l.id === activeLessonId);
+
   const activeChatContext = {
     gateYear,
     topicName: topic?.name || null,
     currentQuestion: (screen === "test" && qs && qs[curQ]) ? { q: qs[curQ].q, options: qs[curQ].options, hint: qs[curQ].hint } : null,
     recentScore: (screen === "result" && score !== null && topic) ? { score, total: qs.length, pct: Math.round((score/qs.length)*100), topic: topic.name } : null,
     activeNotes: (screen === "notes" && topic) ? NOTES[topic.id] : null,
+    activeTab,
+    courseTitle: selectedCourse?.title || waterSupplyAndSanitaryCourse?.title || "Water Supply, Sanitation and Environmental Engineering",
+    currentModule: activeModuleId,
+    currentLessonId: activeLessonId,
+    lessonTitle: activeLessonObj?.title || null,
+    learningObjectives: activeLessonObj?.learningObjectives || null,
+    approvedContent: activeLessonObj?.content || null,
+    rubric: activeLessonObj?.understandingCheck?.rubric || null,
+    preferredLanguage: user?.preferredLanguage || "en",
+    explanationStyle: user?.explanationStyle || "simple",
   };
 
   const th = T[dark?"dark":"light"];
-  useEffect(loadFonts,[]);
+
+  useEffect(() => {
+    loadFonts();
+    const existing = getCurrentUser();
+    if (existing) {
+      setUser(existing);
+      setGateYear(existing.gateYear || 2027);
+      if (initialScreen === "auth" || initialScreen === "landing") {
+        setActiveTab("academy");
+        setScreen("academy");
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(()=>{
     if(screen==="result"){setAgentStep(0);const ts=[0,1,2,3].map((i)=>setTimeout(()=>setAgentStep(i+1),i*700+500));return()=>ts.forEach(clearTimeout);}
@@ -561,6 +610,7 @@ export default function App() {
       // Small timeout so result screen renders first, then coach appears instantly
       setTimeout(()=>fetchCoach(), 50);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[screen,score]);
 
   // ── STYLES ────────────────────────────────────────────────────────────────
@@ -573,32 +623,48 @@ export default function App() {
 
   // ── NAV ───────────────────────────────────────────────────────────────────
   const Nav=({back,sub})=>(
-    <div style={{display:"flex",alignItems:"center",gap:12,padding:"10px 24px",borderBottom:`1px solid ${th.border}`,background:th.navBg,backdropFilter:"blur(12px)",position:"sticky",top:0,zIndex:100}}>
-      {back&&<button onClick={back} style={btnGhost({padding:"7px 14px",fontSize:12})}>← Back</button>}
-      <div style={{display:"flex",alignItems:"center",gap:10,flex:1}}>
-        <Logo size={30}/>
-        <div>
-          <div style={{fontFamily:"'Outfit',sans-serif",fontWeight:800,fontSize:16,letterSpacing:"-0.5px"}}>
-            <span style={{background:`linear-gradient(135deg,${C.primary},${C.purple})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Learn</span>
-            <span style={{color:th.text}}>Loop</span>
+    <>
+      <Navbar
+        dark={dark}
+        setDark={setDark}
+        activeTab={activeTab === "practice" ? "practice" : activeTab}
+        setActiveTab={(tab) => {
+          setActiveTab(tab);
+          setScreen(tab);
+          if (tab === "academy") setAcademySubView("catalogue");
+        }}
+        user={user}
+        setUser={setUser}
+        onOpenAuth={(mode) => {
+          setAuthMode(mode);
+          setAuthErr("");
+          setScreen("auth");
+        }}
+        gateYear={gateYear}
+      />
+      <div style={{display:"flex",alignItems:"center",gap:12,padding:"10px 24px",borderBottom:`1px solid ${th.border}`,background:th.navBg,backdropFilter:"blur(12px)",position:"sticky",top:68,zIndex:90}}>
+        {back&&<button onClick={back} style={btnGhost({padding:"6px 14px",fontSize:12})}>← Back</button>}
+        <div style={{display:"flex",alignItems:"center",gap:10,flex:1}}>
+          <Logo size={26}/>
+          <div>
+            <div style={{fontFamily:"'Outfit',sans-serif",fontWeight:700,fontSize:14,letterSpacing:"-0.3px"}}>
+              <span style={{color:th.text}}>GATE Practice Track: Concrete Technology</span>
+            </div>
           </div>
-          <div style={{fontSize:8,color:th.textDim,fontWeight:700,letterSpacing:"1.8px",textTransform:"uppercase",marginTop:-1}}>INTELLIGENT CONCEPT</div>
+          {sub&&<span style={{color:th.textDim,fontSize:12,marginLeft:8}}>/ {sub}</span>}
         </div>
-        {sub&&<span style={{color:th.textDim,fontSize:12,marginLeft:8}}>/ {sub}</span>}
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          {user&&<div style={{fontSize:13,color:th.textMid}}>Hi, <span style={{color:C.primary,fontWeight:600}}>{user.name}</span></div>}
+          {screen!=="auth"&&<button onClick={()=>{setActiveTab("practice");setScreen("planner");}} style={{...btnGhost({padding:"6px 14px",fontSize:12}),color:C.warn,borderColor:`${C.warn}40`}}>📅 Study Plan</button>}
+          <div style={{background:`${C.primary}20`,color:C.primary,fontSize:10,fontWeight:700,padding:"4px 12px",borderRadius:20}}>GATE {gateYear||"—"}</div>
+        </div>
       </div>
-      <div style={{display:"flex",alignItems:"center",gap:10}}>
-        {user&&<div style={{fontSize:13,color:th.textMid}}>Hi, <span style={{color:C.primary,fontWeight:600}}>{user.name}</span></div>}
-        {screen!=="auth"&&<button onClick={()=>setScreen("planner")} style={{...btnGhost({padding:"7px 14px",fontSize:12}),color:C.warn,borderColor:`${C.warn}40`}}>📅 Study Plan</button>}
-        <button onClick={()=>setDark(d=>!d)} style={{background:th.elevated,border:`1px solid ${th.border}`,borderRadius:20,padding:"6px 14px",cursor:"pointer",fontSize:13,color:th.textMid,fontFamily:"'DM Sans',sans-serif",fontWeight:500}}>
-          {dark?"☀️ Light":"🌙 Dark"}
-        </button>
-        <div style={{background:`${C.primary}20`,color:C.primary,fontSize:10,fontWeight:700,padding:"5px 12px",borderRadius:20}}>GATE {gateYear||"—"}</div>
-      </div>
-    </div>
+    </>
   );
 
   // ── COACH — instant local, no API call ───────────────────────────────────
   function fetchCoach(){
+    // eslint-disable-next-line no-unused-vars
     const decay=getDecay(score,qs.length);
     const pct=Math.round((score/qs.length)*100);
     const tips={
@@ -667,22 +733,18 @@ Generate a PERSONALIZED GATE ${yr} preparation revision plan. Respond ONLY with 
 
 Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. Be very specific — mention IS 456 clauses, formula numbers, exact code values.`;
 
-    try{
-      const apiKey = process.env.REACT_APP_GEMINI_KEY;
-      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
-          contents:[{parts:[{text:prompt}]}],
-          generationConfig:{maxOutputTokens:2000,temperature:0.7}
-        })
-      });
-      const d=await res.json();
-      const text=d.candidates?.[0]?.content?.parts?.[0]?.text||"{}";
-      const clean=text.replace(/```json|```/g,"").trim();
-      const plan=JSON.parse(clean);
-      setRevPlan(plan);
-    }catch(e){setPlanErr("Could not generate plan. Check your Gemini API key and try again.");}
+    try {
+      const res = await sendChatMessage([{ role: "user", content: prompt }]);
+      if (res.reply) {
+        const clean = res.reply.replace(/```json|```/g, "").trim();
+        const plan = JSON.parse(clean);
+        setRevPlan(plan);
+      } else {
+        setPlanErr(res.error || "Could not generate plan. Please try again.");
+      }
+    } catch(e) {
+      setPlanErr("Could not generate plan. Please try again.");
+    }
     setPlanLoading(false);
   }
 
@@ -711,18 +773,27 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
   }
 
   // ── AUTH SCREEN ───────────────────────────────────────────────────────────
-  function handleAuth(){
+  async function handleAuth(){
     setAuthErr("");
     if(!gateYear){setAuthErr("Please select your GATE exam year to continue");return;}
     if(authMode==="signup"){
       if(!form.name.trim()){setAuthErr("Please enter your name");return;}
       if(!form.email.includes("@")){setAuthErr("Please enter a valid email");return;}
       if(form.password.length<6){setAuthErr("Password must be at least 6 characters");return;}
-      setUser({name:form.name,email:form.email});setScreen("dashboard");
+      const res = await registerUser(form.name, form.email, form.password, gateYear);
+      if(!res.success){ setAuthErr(res.error); return; }
+      setUser(res.user);
+      setActiveTab("practice");
+      setScreen("dashboard");
     }else{
       if(!form.email.includes("@")){setAuthErr("Please enter a valid email");return;}
       if(!form.password){setAuthErr("Please enter your password");return;}
-      setUser({name:form.email.split("@")[0],email:form.email});setScreen("dashboard");
+      const res = await loginUser(form.email, form.password);
+      if(!res.success){ setAuthErr(res.error); return; }
+      setUser(res.user);
+      setGateYear(res.user.gateYear || gateYear || 2027);
+      setActiveTab("practice");
+      setScreen("dashboard");
     }
   }
 
@@ -736,8 +807,8 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
             <div style={{background:dark?"rgba(99,102,241,0.1)":"rgba(99,102,241,0.06)",borderRadius:28,padding:24,border:`1px solid ${C.primary}25`}}><Logo size={72}/></div>
           </div>
           <h1 style={{...heading(36),background:`linear-gradient(135deg,${C.primary},${C.purple})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:6}}>LearnLoop</h1>
-          <div style={{fontSize:10,color:th.textDim,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",marginBottom:20}}>INTELLIGENT CONCEPT</div>
-          <p style={{color:th.textMid,fontSize:15,lineHeight:1.7,marginBottom:28}}>Agentic AI-powered learning platform for<br/><strong style={{color:th.text}}>GATE Civil Engineering</strong> students.</p>
+          <div style={{fontSize:10,color:th.textDim,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",marginBottom:20}}>INTELLIGENT CONCEPT · AI ACADEMY · STRUCTAMIND</div>
+          <p style={{color:th.textMid,fontSize:15,lineHeight:1.7,marginBottom:28}}>Engineering Minds. Structuring Futures.<br/><strong style={{color:th.text}}>Civil & Environmental Engineering</strong></p>
           {/* GATE Countdown — updates live as user picks year on the right */}
           <div style={{background:dark?"rgba(239,68,68,0.08)":"rgba(239,68,68,0.05)",border:"1px solid rgba(239,68,68,0.2)",borderRadius:14,padding:"16px 20px",marginBottom:24}}>
             <div style={{fontSize:10,color:"#EF4444",fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>
@@ -760,7 +831,7 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
             )}
           </div>
           <div style={{display:"flex",flexDirection:"column",gap:10}}>
-            {[["🧠","287 real GATE-level questions"],["📅","AI Revision Planner — updates after every test"],["📊","Concept gap analysis + progress tracking"],["🤖","Personalized AI Study Coach"]].map(([i,t])=>(
+            {[["🎓","Core Civil Engineering Curriculum with GATE CE & ES Highlights"],["🧠","Multilingual AI Teacher with Concept Checks"],["🏆","Outcome-based verifiable credentials"],["⚡","287 GATE MCQs with AI Coaching"]].map(([i,t])=>(
               <div key={t} style={{display:"flex",alignItems:"center",gap:10,background:dark?"rgba(99,102,241,0.06)":"rgba(99,102,241,0.04)",borderRadius:8,padding:"10px 14px",border:`1px solid ${C.primary}12`,textAlign:"left"}}>
                 <span style={{fontSize:16}}>{i}</span><span style={{fontSize:13,color:th.textMid}}>{t}</span>
               </div>
@@ -770,9 +841,12 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
       </div>
       {/* Right Form */}
       <div style={{width:440,display:"flex",flexDirection:"column",justifyContent:"center",padding:48,background:th.surface,borderLeft:`1px solid ${th.border}`,overflowY:"auto"}}>
-        <div style={{marginBottom:8}}><button onClick={()=>setDark(d=>!d)} style={btnGhost({padding:"6px 14px",fontSize:12,marginBottom:28})}>{dark?"☀️ Light Mode":"🌙 Dark Mode"}</button></div>
+        <div style={{marginBottom:8,display:"flex",gap:10}}>
+          <button onClick={()=>setDark(d=>!d)} style={btnGhost({padding:"6px 14px",fontSize:12,marginBottom:24})}>{dark?"☀️ Light Mode":"🌙 Dark Mode"}</button>
+          <button onClick={()=>{setActiveTab("landing");setScreen("landing");}} style={btnGhost({padding:"6px 14px",fontSize:12,marginBottom:24})}>← Back to Course</button>
+        </div>
         <h2 style={{...heading(28),marginBottom:8}}>{authMode==="login"?"Welcome back":"Create account"}</h2>
-        <p style={{color:th.textMid,fontSize:14,marginBottom:24}}>{authMode==="login"?"Sign in to continue your GATE prep":"Start your personalized learning journey"}</p>
+        <p style={{color:th.textMid,fontSize:14,marginBottom:24}}>{authMode==="login"?"Sign in to continue your Civil Engineering coursework":"Enrol free and unlock the 6-module curriculum"}</p>
         <div style={{display:"flex",flexDirection:"column",gap:14}}>
 
           {/* ── GATE YEAR PICKER ── */}
@@ -828,6 +902,367 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
       </div>
     </div>
   );
+
+  // ── PUBLIC LANDING PAGE ──────────────────────────────────────────────────
+  if (screen === "landing" || (!user && activeTab === "landing")) {
+    return (
+      <div style={appStyle}>
+        <Navbar
+          dark={dark}
+          setDark={setDark}
+          activeTab={activeTab}
+          setActiveTab={(tab) => {
+            setActiveTab(tab);
+            setScreen(tab);
+          }}
+          user={user}
+          setUser={setUser}
+          onOpenAuth={(mode) => {
+            setAuthMode(mode);
+            setAuthErr("");
+            setScreen("auth");
+          }}
+          gateYear={gateYear}
+        />
+        <PublicLanding
+          dark={dark}
+          onOpenAuth={(mode) => {
+            setAuthMode(mode);
+            setAuthErr("");
+            setScreen("auth");
+          }}
+          onExploreCourse={() => {
+            setActiveTab("academy");
+            setScreen("academy");
+            setAcademySubView("catalogue");
+          }}
+          onVerifyCert={() => {
+            setActiveTab("certificates-public");
+            setScreen("certificates-public");
+          }}
+        />
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
+      </div>
+    );
+  }
+
+  // ── PUBLIC CERTIFICATE VERIFICATION ───────────────────────────────────────
+  if (screen === "certificates-public" || (activeTab === "certificates-public" && !user)) {
+    return (
+      <div style={appStyle}>
+        <Navbar
+          dark={dark}
+          setDark={setDark}
+          activeTab="certificates-public"
+          setActiveTab={(tab) => {
+            setActiveTab(tab);
+            setScreen(tab);
+          }}
+          user={user}
+          setUser={setUser}
+          onOpenAuth={(mode) => {
+            setAuthMode(mode);
+            setAuthErr("");
+            setScreen("auth");
+          }}
+          gateYear={gateYear}
+        />
+        <CertificateView
+          user={user}
+          dark={dark}
+          onNavigateBack={() => {
+            setActiveTab("landing");
+            setScreen("landing");
+          }}
+        />
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
+      </div>
+    );
+  }
+
+  // ── ACADEMY COURSES & LESSON PLAYER ───────────────────────────────────────
+  if (activeTab === "academy" || screen === "academy") {
+    let academyContent = null;
+    if (academySubView === "catalogue") {
+      academyContent = (
+        <CourseCatalogueView
+          courses={civilEngineeringCatalogue}
+          user={user}
+          dark={dark}
+          onSelectCourse={(course) => {
+            setSelectedCourseId(course.id);
+            setAcademySubView("overview");
+          }}
+        />
+      );
+    } else if (academySubView === "lesson") {
+      academyContent = (
+        <LessonPlayer
+          user={user}
+          dark={dark}
+          initialModuleId={activeModuleId}
+          initialLessonId={activeLessonId}
+          onBackToCourse={() => setAcademySubView("overview")}
+          onNavigateLesson={(targetLesson) => {
+            const lessonId = typeof targetLesson === "object" ? targetLesson?.id : targetLesson;
+            if (!lessonId) return;
+            const parentMod = (waterSupplyAndSanitaryCourse?.modules || []).find((m) =>
+              (m.lessons || []).some((l) => l.id === lessonId)
+            );
+            setActiveLessonId(lessonId);
+            if (parentMod) setActiveModuleId(parentMod.id);
+          }}
+          onOpenAssessment={(modId) => {
+            setActiveModuleId(typeof modId === "object" ? modId?.id : modId);
+            setAcademySubView("assessment");
+          }}
+        />
+      );
+    } else if (academySubView === "assessment") {
+      const activeMod = (waterSupplyAndSanitaryCourse?.modules || []).find((m) => m.id === activeModuleId);
+      academyContent = (
+        <ModuleAssessmentView
+          user={user}
+          dark={dark}
+          module={activeMod}
+          moduleId={activeModuleId}
+          course={waterSupplyAndSanitaryCourse}
+          onBack={() => setAcademySubView("overview")}
+          onBackToCourse={() => setAcademySubView("overview")}
+          onComplete={() => setAcademySubView("overview")}
+        />
+      );
+    } else if (academySubView === "final-exam") {
+      academyContent = (
+        <FinalExamView
+          user={user}
+          dark={dark}
+          onBack={() => setAcademySubView("overview")}
+          onBackToCourse={() => setAcademySubView("overview")}
+          onViewCertificates={() => {
+            setActiveTab("certificates");
+            setScreen("certificates");
+          }}
+          onComplete={() => {
+            setActiveTab("certificates");
+            setScreen("certificates");
+          }}
+        />
+      );
+    } else {
+      academyContent = (
+        <CourseOverview
+          user={user}
+          dark={dark}
+          course={selectedCourse}
+          onBackToCatalogue={() => setAcademySubView("catalogue")}
+          onSelectCourse={(course) => {
+            setSelectedCourseId(course.id);
+            setAcademySubView("overview");
+          }}
+          onSelectLesson={(arg1, arg2) => {
+            let lessonId = null;
+            let moduleId = null;
+            if (typeof arg1 === "object" && arg1 !== null) {
+              lessonId = arg1.id;
+              moduleId = arg2 || arg1.moduleId;
+            } else if (typeof arg1 === "string" && typeof arg2 === "string") {
+              moduleId = arg1;
+              lessonId = arg2;
+            } else if (typeof arg1 === "string") {
+              lessonId = arg1;
+              moduleId = arg2;
+            }
+            if (!moduleId && lessonId) {
+              moduleId = (waterSupplyAndSanitaryCourse?.modules || []).find((m) =>
+                (m.lessons || []).some((l) => l.id === lessonId)
+              )?.id;
+            }
+            if (moduleId) setActiveModuleId(moduleId);
+            if (lessonId) setActiveLessonId(lessonId);
+            setAcademySubView("lesson");
+          }}
+          onStartModuleAssessment={(mod) => {
+            const modId = typeof mod === "object" ? mod?.id : mod;
+            if (modId) setActiveModuleId(modId);
+            setAcademySubView("assessment");
+          }}
+          onTakeAssessment={(modId) => {
+            const mId = typeof modId === "object" ? modId?.id : modId;
+            if (mId) setActiveModuleId(mId);
+            setAcademySubView("assessment");
+          }}
+          onStartFinalExam={() => {
+            setAcademySubView("final-exam");
+          }}
+          onTakeFinalExam={() => {
+            setAcademySubView("final-exam");
+          }}
+          onViewCertificates={() => {
+            setActiveTab("certificates");
+            setScreen("certificates");
+          }}
+        />
+      );
+    }
+
+    return (
+      <div style={appStyle}>
+        <Navbar
+          dark={dark}
+          setDark={setDark}
+          activeTab={activeTab}
+          setActiveTab={(tab) => {
+            setActiveTab(tab);
+            setScreen(tab);
+            if (tab === "academy") setAcademySubView("catalogue");
+          }}
+          user={user}
+          setUser={setUser}
+          onOpenAuth={(mode) => {
+            setAuthMode(mode);
+            setAuthErr("");
+            setScreen("auth");
+          }}
+          gateYear={gateYear}
+        />
+        {academyContent}
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
+      </div>
+    );
+  }
+
+  // ── ACADEMY DASHBOARD ─────────────────────────────────────────────────────
+  if (activeTab === "dashboard") {
+    return (
+      <div style={appStyle}>
+        <Navbar
+          dark={dark}
+          setDark={setDark}
+          activeTab="dashboard"
+          setActiveTab={(tab) => {
+            setActiveTab(tab);
+            setScreen(tab);
+            if (tab === "academy") setAcademySubView("catalogue");
+          }}
+          user={user}
+          setUser={setUser}
+          onOpenAuth={(mode) => {
+            setAuthMode(mode);
+            setAuthErr("");
+            setScreen("auth");
+          }}
+          gateYear={gateYear}
+        />
+        <DashboardView
+          user={user}
+          dark={dark}
+          onOpenLesson={(modId, lesId) => {
+            setActiveTab("academy");
+            setScreen("academy");
+            setActiveModuleId(modId);
+            setActiveLessonId(lesId);
+            setAcademySubView("lesson");
+          }}
+          onOpenAssessment={(modId) => {
+            setActiveTab("academy");
+            setScreen("academy");
+            setActiveModuleId(modId);
+            setAcademySubView("assessment");
+          }}
+          onOpenFinalExam={() => {
+            setActiveTab("academy");
+            setScreen("academy");
+            setAcademySubView("final-exam");
+          }}
+          onOpenCertificates={() => {
+            setActiveTab("certificates");
+            setScreen("certificates");
+          }}
+          onSwitchTab={(tab) => {
+            setActiveTab(tab);
+            setScreen(tab);
+          }}
+        />
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
+      </div>
+    );
+  }
+
+  // ── CERTIFICATES ──────────────────────────────────────────────────────────
+  if (activeTab === "certificates" || screen === "certificates") {
+    return (
+      <div style={appStyle}>
+        <Navbar
+          dark={dark}
+          setDark={setDark}
+          activeTab="certificates"
+          setActiveTab={(tab) => {
+            setActiveTab(tab);
+            setScreen(tab);
+            if (tab === "academy") setAcademySubView("catalogue");
+          }}
+          user={user}
+          setUser={setUser}
+          onOpenAuth={(mode) => {
+            setAuthMode(mode);
+            setAuthErr("");
+            setScreen("auth");
+          }}
+          gateYear={gateYear}
+        />
+        <CertificateView
+          user={user}
+          dark={dark}
+          onNavigateBack={() => {
+            setActiveTab("academy");
+            setScreen("academy");
+            setAcademySubView("overview");
+          }}
+        />
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
+      </div>
+    );
+  }
+
+  // ── PROFILE & SETTINGS ────────────────────────────────────────────────────
+  if (activeTab === "profile" || screen === "profile") {
+    return (
+      <div style={appStyle}>
+        <Navbar
+          dark={dark}
+          setDark={setDark}
+          activeTab="profile"
+          setActiveTab={(tab) => {
+            setActiveTab(tab);
+            setScreen(tab);
+            if (tab === "academy") setAcademySubView("catalogue");
+          }}
+          user={user}
+          setUser={setUser}
+          onOpenAuth={(mode) => {
+            setAuthMode(mode);
+            setAuthErr("");
+            setScreen("auth");
+          }}
+          gateYear={gateYear}
+        />
+        <ProfileView
+          user={user}
+          setUser={setUser}
+          dark={dark}
+          onLogout={() => {
+            logoutUser();
+            setUser(null);
+            setActiveTab("landing");
+            setScreen("landing");
+          }}
+        />
+        <Chatbot dark={dark} user={user} activeContext={activeChatContext} />
+      </div>
+    );
+  }
+
 
   // ── PLANNER SCREEN ────────────────────────────────────────────────────────
   if(screen==="planner"){
@@ -1038,14 +1473,14 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
                               <span style={{fontSize:14}}>{t?.icon||"📚"}</span>
                               <div>
                                 <div style={{fontSize:11,color:th.textDim,fontWeight:600}}>{gap.topic}</div>
-                                <div style={{fontWeight:700,fontSize:13,color:th.text}}>{gap.concept}</div>
+                                <div style={{fontWeight:700,fontSize:13,color:th.text}}><FormattedContent inline content={gap.concept} /></div>
                               </div>
                             </div>
                             <span style={{background:`${pColor}15`,color:pColor,fontSize:9,fontWeight:700,padding:"3px 8px",borderRadius:20,textTransform:"uppercase",flexShrink:0}}>{gap.priority}</span>
                           </div>
-                          {gap.why&&<p style={{fontSize:11,color:th.textDim,margin:"0 0 6px",lineHeight:1.5,fontStyle:"italic"}}>{gap.why}</p>}
+                          {gap.why&&<p style={{fontSize:11,color:th.textDim,margin:"0 0 6px",lineHeight:1.5,fontStyle:"italic"}}><FormattedContent inline content={gap.why} /></p>}
                           {gap.action&&<div style={{background:dark?`${pColor}08`:`${pColor}05`,borderRadius:8,padding:"8px 10px",fontSize:11,color:th.textMid,lineHeight:1.5}}>
-                            <span style={{color:pColor,fontWeight:700}}>Action: </span>{gap.action}
+                            <span style={{color:pColor,fontWeight:700}}>Action: </span><FormattedContent inline content={gap.action} />
                           </div>}
                         </div>
                       );
@@ -1264,17 +1699,17 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
           <div style={{background:th.elevated,borderRadius:4,height:3,marginBottom:22,overflow:"hidden"}}><div style={{background:`linear-gradient(90deg,${topic.color},${C.purple})`,height:"100%",width:`${pct}%`,transition:"width 0.4s",borderRadius:4}}/></div>
           <div style={cardStyle({marginBottom:14,borderColor:`${topic.color}25`})}>
             <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:10}}><div style={{background:`${topic.color}12`,color:topic.color,fontSize:9,fontWeight:700,padding:"3px 9px",borderRadius:20,letterSpacing:1}}>QUESTION {curQ+1}</div></div>
-            <p style={{fontSize:16,lineHeight:1.7,color:th.text,margin:0,fontWeight:500}}>{q.q}</p>
+            <div style={{fontSize:16,lineHeight:1.7,color:th.text,margin:0,fontWeight:500}}><FormattedContent inline content={q.q} /></div>
           </div>
           <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:16}}>
             {q.options.map((opt,i)=>(<button key={i} onClick={()=>setSel(i)} style={{background:sel===i?`${topic.color}12`:th.card,color:sel===i?th.text:th.textMid,border:`${sel===i?"2px":"1px"} solid ${sel===i?topic.color:th.border}`,borderRadius:12,padding:"13px 16px",textAlign:"left",cursor:"pointer",fontSize:13,lineHeight:1.4,transition:"all 0.15s",fontFamily:"'DM Sans',sans-serif",display:"flex",alignItems:"flex-start",gap:10,boxShadow:sel===i?`0 4px 14px ${topic.color}12`:"none"}}>
               <span style={{minWidth:22,height:22,borderRadius:6,background:sel===i?topic.color:th.elevated,color:sel===i?"#fff":th.textDim,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,flexShrink:0}}>{["A","B","C","D"][i]}</span>
-              <span>{opt}</span>
+              <span><FormattedContent inline content={opt} /></span>
             </button>))}
           </div>
           {q.hint&&<div style={{marginBottom:14}}>
             <button onClick={()=>setHint(v=>!v)} style={{background:"transparent",color:C.warn,border:`1px solid ${C.warn}35`,borderRadius:8,padding:"7px 14px",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>💡 {hint?"Hide Hint":"Show Hint"}</button>
-            {hint&&<div style={{marginTop:8,background:dark?"rgba(245,158,11,0.06)":"rgba(245,158,11,0.04)",border:`1px solid ${C.warn}20`,borderRadius:10,padding:"12px 16px"}}><span style={{color:C.warn,fontWeight:700,fontSize:10,textTransform:"uppercase",letterSpacing:1}}>Hint </span><span style={{color:dark?"#FDE68A":"#92400E",fontSize:13,lineHeight:1.6}}>{q.hint}</span></div>}
+            {hint&&<div style={{marginTop:8,background:dark?"rgba(245,158,11,0.06)":"rgba(245,158,11,0.04)",border:`1px solid ${C.warn}20`,borderRadius:10,padding:"12px 16px"}}><span style={{color:C.warn,fontWeight:700,fontSize:10,textTransform:"uppercase",letterSpacing:1}}>Hint </span><span style={{color:dark?"#FDE68A":"#92400E",fontSize:13,lineHeight:1.6}}><FormattedContent inline content={q.hint} /></span></div>}
           </div>}
           <button onClick={submitAns} disabled={sel===null} style={btnPri({width:"100%",padding:"14px",fontSize:14,borderRadius:12,opacity:sel===null?0.4:1,cursor:sel===null?"not-allowed":"pointer"})}>
             {curQ+1<qs.length?"Next Question →":"Submit & See Results 🎯"}
@@ -1325,7 +1760,7 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
           </div>
           <div style={cardStyle({borderColor:`${C.purple}20`,background:dark?"rgba(139,92,246,0.03)":"rgba(139,92,246,0.02)",marginBottom:14})}>
             <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}><div style={{background:`${C.purple}15`,color:C.purple,fontSize:9,fontWeight:700,padding:"3px 9px",borderRadius:20}}>🤖 AI STUDY COACH</div></div>
-            {coachLoading?<div style={{color:`${C.purple}60`,fontSize:12,fontStyle:"italic"}}>Generating your personalized insight...</div>:<p style={{color:dark?"#C4B5FD":C.purple,fontSize:13,lineHeight:1.7,margin:0}}>{coach}</p>}
+            {coachLoading?<div style={{color:`${C.purple}60`,fontSize:12,fontStyle:"italic"}}>Generating your personalized insight...</div>:<div style={{color:dark?"#C4B5FD":C.purple,fontSize:13,lineHeight:1.7,margin:0}}><FormattedContent content={coach} /></div>}
           </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
             {decay.level!=="low"&&<button onClick={()=>setScreen("notes")} style={btnPri({background:`linear-gradient(135deg,${decay.level==="high"?C.danger:C.warn},${decay.level==="high"?"#DC2626":"#D97706"})`})}>{decay.level==="high"?"📖 Deep Revision Notes":"⚡ Quick Notes"}</button>}
@@ -1424,7 +1859,9 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
             <div style={{color:noteTab==="notes"?C.purple:C.primary,fontWeight:700,fontSize:10,textTransform:"uppercase",letterSpacing:1.5,marginBottom:14}}>
               {noteTab==="notes"?`Revision Notes — ${topic.name}`:"Formula & IS Code Cheat Sheet"}
             </div>
-            <pre style={{fontSize:13,color:th.text,lineHeight:1.85,whiteSpace:"pre-wrap",fontFamily:"'DM Sans',system-ui,sans-serif",margin:0}}>{noteTab==="notes"?NOTES[topic.id]:FORMULA}</pre>
+            <div style={{fontSize:13,color:th.text,lineHeight:1.85,fontFamily:"'DM Sans',system-ui,sans-serif",margin:0}}>
+              <FormattedContent content={noteTab==="notes"?NOTES[topic.id]:FORMULA} />
+            </div>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:16}}>
             <button onClick={()=>startTest(topic,qCount)} style={btnPri()}>🔄 Take Test Now</button>

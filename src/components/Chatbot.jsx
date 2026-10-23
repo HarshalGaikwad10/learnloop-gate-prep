@@ -1,115 +1,8 @@
 // src/components/Chatbot.jsx — Interactive AI Tutor for LearnLoop GATE Prep
 import React, { useState, useEffect, useRef } from 'react';
 import { sendChatMessage } from '../services/chatService';
+import FormattedContent from './common/FormattedContent';
 import '../styles/chatbot.css';
-
-// Formats basic markdown elements: bold, bullet points, numbers, and code blocks
-function renderFormattedMessage(text) {
-  if (!text) return null;
-  const lines = text.split('\n');
-  const elements = [];
-  let inCodeBlock = false;
-  let codeBuffer = [];
-
-  lines.forEach((line, lineIdx) => {
-    // Handle code fences ```
-    if (line.trim().startsWith('```')) {
-      if (inCodeBlock) {
-        elements.push(
-          <pre key={`code-${lineIdx}`}>
-            <code>{codeBuffer.join('\n')}</code>
-          </pre>
-        );
-        codeBuffer = [];
-        inCodeBlock = false;
-      } else {
-        inCodeBlock = true;
-      }
-      return;
-    }
-
-    if (inCodeBlock) {
-      codeBuffer.push(line);
-      return;
-    }
-
-    // Empty line spacer
-    if (!line.trim()) {
-      elements.push(<div key={`sp-${lineIdx}`} style={{ height: 6 }} />);
-      return;
-    }
-
-    // Step or numbered list pattern (e.g., "1. Given Data:", "Step 1:")
-    const stepMatch = line.match(/^(\d+\.|\bStep \d+:?)(.*)/i);
-    if (stepMatch) {
-      elements.push(
-        <div key={`step-${lineIdx}`} style={{ marginBottom: 4 }}>
-          <span className="ll-step-badge">{stepMatch[1]}</span>
-          <span>{renderInlineStyles(stepMatch[2])}</span>
-        </div>
-      );
-      return;
-    }
-
-    // Bullet point pattern
-    if (line.trim().startsWith('- ') || line.trim().startsWith('• ') || line.trim().startsWith('* ')) {
-      const bulletContent = line.trim().replace(/^[-•*]\s+/, '');
-      elements.push(
-        <div key={`li-${lineIdx}`} style={{ display: 'flex', gap: 6, marginBottom: 3, paddingLeft: 6 }}>
-          <span style={{ color: 'var(--ll-primary)' }}>•</span>
-          <span>{renderInlineStyles(bulletContent)}</span>
-        </div>
-      );
-      return;
-    }
-
-    // Regular line
-    elements.push(
-      <p key={`p-${lineIdx}`} style={{ margin: '0 0 6px 0' }}>
-        {renderInlineStyles(line)}
-      </p>
-    );
-  });
-
-  if (inCodeBlock && codeBuffer.length > 0) {
-    elements.push(
-      <pre key="code-final">
-        <code>{codeBuffer.join('\n')}</code>
-      </pre>
-    );
-  }
-
-  return elements;
-}
-
-// Inline formatting: **bold** and `code`
-function renderInlineStyles(text) {
-  if (!text) return '';
-  const parts = [];
-  // Tokenize by code backticks and bold markdown
-  const regex = /(\*\*.*?\*\*|`.*?`)/g;
-  let lastIndex = 0;
-  let match;
-
-  while ((match = regex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push(text.substring(lastIndex, match.index));
-    }
-    const token = match[0];
-    if (token.startsWith('**') && token.endsWith('**')) {
-      parts.push(<strong key={match.index}>{token.slice(2, -2)}</strong>);
-    } else if (token.startsWith('`') && token.endsWith('`')) {
-      parts.push(<code key={match.index}>{token.slice(1, -1)}</code>);
-    }
-    lastIndex = regex.lastIndex;
-  }
-
-  if (lastIndex < text.length) {
-    parts.push(text.substring(lastIndex));
-  }
-
-  return parts.length > 0 ? parts : text;
-}
 
 export default function Chatbot({
   dark = true,
@@ -217,17 +110,45 @@ export default function Chatbot({
     }
   };
 
-  // Retry last user message
-  const handleRetry = () => {
-    if (messages.length === 0) return;
+  // Retry last user message safely without state race conditions or duplicate entries
+  const handleRetry = async () => {
+    if (loading || messages.length === 0) return;
+    setError('');
+
     const lastUserIdx = [...messages].reverse().findIndex(m => m.role === 'user');
-    if (lastUserIdx !== -1) {
-      const actualIdx = messages.length - 1 - lastUserIdx;
-      const textToRetry = messages[actualIdx].content;
-      // Truncate messages up to the last user message
-      setMessages(messages.slice(0, actualIdx));
-      handleSend(textToRetry);
+    if (lastUserIdx === -1) return;
+    const actualIdx = messages.length - 1 - lastUserIdx;
+
+    // Preserve all messages up to and including the failed user query
+    const targetMessages = messages.slice(0, actualIdx + 1);
+    setMessages(targetMessages);
+
+    setLoading(true);
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
     }
+    const abortCtrl = new AbortController();
+    abortControllerRef.current = abortCtrl;
+
+    const contextToSend = dismissedContext ? {} : activeContext;
+    const res = await sendChatMessage(targetMessages, contextToSend, abortCtrl.signal);
+
+    if (!isMountedRef.current) return;
+
+    if (res.error) {
+      setError(res.error);
+    } else if (res.reply) {
+      const tutorMsg = {
+        id: Date.now() + 1,
+        role: 'assistant',
+        content: res.reply,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages([...targetMessages, tutorMsg]);
+    }
+
+    setLoading(false);
   };
 
   // Reset conversation
@@ -372,24 +293,28 @@ export default function Chatbot({
                   <button
                     className="ll-suggested-chip"
                     onClick={() => handleSend("Explain Abram's Law and why w/c ratio governs concrete strength.")}
+                    disabled={loading}
                   >
                     <span>💡</span> Explain Abram's Law simply
                   </button>
                   <button
                     className="ll-suggested-chip"
                     onClick={() => handleSend("What is the difference between Flash Set and False Set in cement hydration?")}
+                    disabled={loading}
                   >
                     <span>⚡</span> Flash Set vs False Set
                   </button>
                   <button
                     className="ll-suggested-chip"
                     onClick={() => handleSend("Solve a step-by-step numerical for gel-space ratio given x = 0.89 and intrinsic strength 260 MPa.")}
+                    disabled={loading}
                   >
                     <span>🔢</span> Solve a Gel-Space ratio numerical
                   </button>
                   <button
                     className="ll-suggested-chip"
                     onClick={() => handleSend("What are the IS 456 Table 5 maximum w/c limits for all 5 exposure conditions?")}
+                    disabled={loading}
                   >
                     <span>📘</span> IS 456 Table 5 Exposure limits
                   </button>
@@ -403,7 +328,7 @@ export default function Chatbot({
                 className={`ll-message-row ${m.role === 'user' ? 'user' : 'tutor'}`}
               >
                 <div className="ll-message-bubble">
-                  {m.role === 'user' ? m.content : renderFormattedMessage(m.content)}
+                  <FormattedContent content={m.content} />
                 </div>
                 {m.timestamp && <span className="ll-message-time">{m.timestamp}</span>}
               </div>
@@ -422,8 +347,13 @@ export default function Chatbot({
             {error && (
               <div className="ll-error-banner" role="alert">
                 <span>⚠️ {error}</span>
-                <button className="ll-retry-btn" onClick={handleRetry}>
-                  Retry
+                <button
+                  className="ll-retry-btn"
+                  onClick={handleRetry}
+                  disabled={loading}
+                  data-testid="chat-retry-btn"
+                >
+                  {loading ? 'Retrying...' : 'Retry'}
                 </button>
               </div>
             )}

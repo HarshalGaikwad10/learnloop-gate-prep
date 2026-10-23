@@ -707,6 +707,56 @@
   color: #ffffff;
 }
 
+/* ─── ERROR BANNER & RETRY BUTTON ─────────────────────────────────────────── */
+.ll-error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 10px 0;
+  padding: 10px 14px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 10px;
+  color: #FCA5A5;
+  font-size: 13px;
+  line-height: 1.4;
+  animation: fadeIn 0.2s ease-out;
+}
+
+[data-theme='light'] .ll-error-banner,
+body.light-theme .ll-error-banner {
+  background: #FEF2F2;
+  border-color: #FCA5A5;
+  color: #B91C1C;
+}
+
+.ll-retry-btn {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  background: #EF4444;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ll-retry-btn:hover:not(:disabled) {
+  background: #DC2626;
+  transform: translateY(-1px);
+}
+
+.ll-retry-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* ─── RESPONSIVE (MOBILE & TABLET) ────────────────────────────────────────── */
 @media (max-width: 640px) {
   .ll-chatbot-root {

@@ -1,0 +1,944 @@
+/* src/styles/academy.css — Styling for LearnLoop AI Academy */
+
+/* Container and Layout */
+.ll-academy-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ll-text, #F1F5F9);
+}
+
+/* Breadcrumbs */
+.ll-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #94A3B8;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.ll-breadcrumb-link {
+  color: #6366F1;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.ll-breadcrumb-link:hover {
+  text-decoration: underline;
+}
+
+/* Badges */
+.ll-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.ll-tag-primary { background: rgba(99, 102, 241, 0.15); color: #818CF8; border: 1px solid rgba(99, 102, 241, 0.3); }
+.ll-tag-success { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+.ll-tag-warn { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
+.ll-tag-accent { background: rgba(6, 182, 212, 0.15); color: #38BDF8; border: 1px solid rgba(6, 182, 212, 0.3); }
+
+/* Language Selector Bar */
+.ll-lang-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--ll-elevated, #182030);
+  border: 1px solid var(--ll-border, #1E293B);
+  border-radius: 14px;
+  padding: 12px 18px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.ll-lang-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ll-lang-btn {
+  background: transparent;
+  color: #94A3B8;
+  border: 1px solid var(--ll-border, #253352);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+}
+
+.ll-lang-btn:hover {
+  background: rgba(99, 102, 241, 0.1);
+  color: #FFFFFF;
+}
+
+.ll-lang-btn.active {
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  color: #FFFFFF;
+  border-color: #6366F1;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* Lesson Content Typography */
+.ll-lesson-prose {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ll-text, #F1F5F9);
+}
+
+.ll-lesson-prose h2, .ll-lesson-prose h3, .ll-lesson-prose h4 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--ll-text, #FFFFFF);
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+
+.ll-lesson-prose h2 { font-size: 22px; border-bottom: 1px solid var(--ll-border, #1E293B); padding-bottom: 8px; }
+.ll-lesson-prose h3 { font-size: 18px; color: #818CF8; }
+
+.ll-lesson-prose p {
+  margin-bottom: 16px;
+}
+
+.ll-lesson-prose ul, .ll-lesson-prose ol {
+  margin: 12px 0 20px 24px;
+  padding: 0;
+}
+
+.ll-lesson-prose li {
+  margin-bottom: 8px;
+}
+
+.ll-lesson-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 13px;
+  background: var(--ll-elevated, #111827);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ll-lesson-prose th, .ll-lesson-prose td {
+  padding: 12px 16px;
+  border: 1px solid var(--ll-border, #1E293B);
+  text-align: left;
+}
+
+.ll-lesson-prose th {
+  background: rgba(99, 102, 241, 0.12);
+  color: #A5B4FC;
+  font-weight: 700;
+}
+
+/* Callout Box */
+.ll-callout {
+  background: rgba(99, 102, 241, 0.08);
+  border-left: 4px solid #6366F1;
+  border-radius: 0 12px 12px 0;
+  padding: 16px 20px;
+  margin: 20px 0;
+}
+
+.ll-callout-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #818CF8;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Understanding Check Section (Signature Feature) */
+.ll-check-container {
+  background: var(--ll-card, #111827);
+  border: 2px solid rgba(99, 102, 241, 0.35);
+  border-radius: 18px;
+  padding: 24px 28px;
+  margin: 36px 0;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.ll-check-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.ll-check-badge {
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 12px;
+  letter-spacing: 1px;
+}
+
+.ll-check-prompt {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ll-text, #F8FAFC);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.ll-check-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--ll-inputBg, #0D1117);
+  color: var(--ll-text, #F1F5F9);
+  border: 1px solid var(--ll-border, #1E293B);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  min-height: 110px;
+  resize: vertical;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.ll-check-textarea:focus {
+  border-color: #6366F1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+}
+
+/* Feedback Box */
+.ll-feedback-box {
+  border-radius: 14px;
+  padding: 20px;
+  margin-top: 20px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.ll-feedback-box.understood {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.ll-feedback-box.partial {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.ll-feedback-box.needs_reteaching {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.ll-feedback-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* Module Accordion & Curriculum Grid */
+.ll-curriculum-card {
+  background: var(--ll-card, #111827);
+  border: 1px solid var(--ll-border, #1E293B);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+
+.ll-curriculum-card:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Progress Bars */
+.ll-progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--ll-elevated, #182030);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.ll-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #6366F1, #10B981);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── MATHEMATICAL EQUATION RENDERING ───────────────────────────────────────── */
+.math-block-container {
+  margin: 18px 0;
+  padding: 16px 20px;
+  background: rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  border-radius: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 16px;
+  font-family: 'KaTeX_Main', 'Cambria Math', 'Times New Roman', serif;
+  color: #F1F5F9;
+  -webkit-overflow-scrolling: touch;
+  transition: all 0.2s ease;
+}
+
+.math-block-container:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.math-block-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 auto;
+}
+
+/* ─── RESPONSIVE ENGINEERING PROCESS FLOW DIAGRAM ─────────────────────────── */
+.ll-process-flow-container {
+  margin: 20px 0;
+  padding: 18px 20px;
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.85));
+  border: 1px solid rgba(99, 102, 241, 0.28);
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+}
+
+[data-theme='light'] .ll-process-flow-container,
+body.light-theme .ll-process-flow-container {
+  background: linear-gradient(145deg, #F8FAFC, #EFF6FF);
+  border: 1px solid #CBD5E1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.ll-process-flow-header {
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 8px;
+}
+
+[data-theme='light'] .ll-process-flow-header,
+body.light-theme .ll-process-flow-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.ll-process-flow-title {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  color: #818CF8;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+[data-theme='light'] .ll-process-flow-title,
+body.light-theme .ll-process-flow-title {
+  color: #4338CA;
+}
+
+.ll-process-flow-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: #94A3B8;
+  line-height: 1.4;
+}
+
+[data-theme='light'] .ll-process-flow-subtitle,
+body.light-theme .ll-process-flow-subtitle {
+  color: #64748B;
+}
+
+.ll-process-flow-track {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  width: 100%;
+}
+
+.ll-process-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 9px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.ll-process-step:hover {
+  border-color: #818CF8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+}
+
+[data-theme='light'] .ll-process-step,
+body.light-theme .ll-process-step {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='light'] .ll-process-step:hover,
+body.light-theme .ll-process-step:hover {
+  border-color: #6366F1;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+}
+
+.ll-process-step-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366F1, #4F46E5);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.ll-process-step-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.ll-process-step-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #F1F5F9;
+  letter-spacing: -0.01em;
+}
+
+[data-theme='light'] .ll-process-step-name,
+body.light-theme .ll-process-step-name {
+  color: #0F172A;
+}
+
+.ll-process-step-desc {
+  font-size: 11px;
+  color: #94A3B8;
+}
+
+[data-theme='light'] .ll-process-step-desc,
+body.light-theme .ll-process-step-desc {
+  color: #64748B;
+}
+
+.ll-process-connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #818CF8;
+  flex-shrink: 0;
+}
+
+[data-theme='light'] .ll-process-connector,
+body.light-theme .ll-process-connector {
+  color: #4F46E5;
+}
+
+.ll-connector-arrow {
+  width: 16px;
+  height: 16px;
+}
+
+.ll-connector-arrow.horizontal {
+  display: block;
+}
+
+.ll-connector-arrow.vertical {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .ll-process-flow-track {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .ll-process-step {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 14px;
+  }
+
+  .ll-process-connector {
+    margin: -1px 0;
+    height: 16px;
+  }
+
+  .ll-connector-arrow.horizontal {
+    display: none;
+  }
+
+  .ll-connector-arrow.vertical {
+    display: block;
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.math-inline {
+  display: inline-block;
+  font-family: 'KaTeX_Main', 'Cambria Math', 'Times New Roman', serif;
+  font-size: 1.04em;
+  padding: 0 3px;
+  color: #38BDF8;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+/* Pure React Math Fallbacks */
+.math-frac {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: middle;
+  text-align: center;
+  margin: 0 4px;
+  line-height: 1.1;
+}
+
+.math-num {
+  border-bottom: 1.5px solid currentColor;
+  padding: 0 3px 2px;
+  font-size: 0.88em;
+}
+
+.math-den {
+  padding: 2px 3px 0;
+  font-size: 0.88em;
+}
+
+.math-sqrt {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 3px;
+}
+
+.math-radicand {
+  font-size: 1.25em;
+  margin-right: 1px;
+  line-height: 1;
+  font-weight: 300;
+}
+
+.math-rad-body {
+  border-top: 1.5px solid currentColor;
+  padding: 1px 4px 0 2px;
+  margin-top: -2px;
+}
+
+.math-sup {
+  font-size: 0.72em;
+  vertical-align: super;
+  line-height: 0;
+}
+
+.math-sub {
+  font-size: 0.72em;
+  vertical-align: sub;
+  line-height: 0;
+}
+
+.math-symbol {
+  font-weight: 500;
+  margin: 0 2px;
+  color: #818CF8;
+}
+
+.math-fn {
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  margin-right: 2px;
+  color: #A5B4FC;
+}
+
+.math-text-upright {
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
+  color: inherit;
+}
+
+/* ─── RESPONSIVE TABLES ──────────────────────────────────────────────────────── */
+.ll-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0;
+  border-radius: 12px;
+  border: 1px solid var(--ll-border, #1E293B);
+  background: var(--ll-card, #111827);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  -webkit-overflow-scrolling: touch;
+}
+
+.ll-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  min-width: 520px;
+}
+
+.ll-table th {
+  background: rgba(99, 102, 241, 0.12);
+  color: #A5B4FC;
+  font-weight: 700;
+  padding: 13px 18px;
+  text-align: left;
+  border-bottom: 1px solid var(--ll-border, #1E293B);
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.3px;
+}
+
+.ll-table td {
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--ll-text, #E2E8F0);
+  line-height: 1.5;
+}
+
+.ll-table tr:last-child td {
+  border-bottom: none;
+}
+
+.ll-table tr:hover td {
+  background: rgba(99, 102, 241, 0.04);
+}
+
+/* ─── CODE & PROSE TYPOGRAPHY ───────────────────────────────────────────────── */
+.ll-code-block-wrapper {
+  position: relative;
+  margin: 18px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+}
+
+.ll-code-lang {
+  position: absolute;
+  right: 14px;
+  top: 8px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #818CF8;
+}
+
+.ll-code-block {
+  margin: 0;
+  padding: 18px 20px;
+  background: #0A0D14;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #E2E8F0;
+  overflow-x: auto;
+}
+
+.ll-inline-code {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818CF8;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.ll-blockquote {
+  border-left: 4px solid #6366F1;
+  margin: 18px 0;
+  padding: 12px 18px;
+  background: rgba(99, 102, 241, 0.06);
+  border-radius: 0 10px 10px 0;
+  color: #C7D2FE;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.ll-prose-h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  margin: 28px 0 14px;
+  color: var(--ll-text, #F1F5F9);
+}
+
+.ll-prose-h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 24px 0 12px;
+  color: var(--ll-text, #F1F5F9);
+  border-bottom: 1px solid var(--ll-border, #1E293B);
+  padding-bottom: 6px;
+}
+
+.ll-prose-h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  margin: 20px 0 10px;
+  color: #818CF8;
+}
+
+.ll-prose-h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14.5px;
+  font-weight: 700;
+  margin: 16px 0 8px;
+  color: #A5B4FC;
+}
+
+.ll-prose-p {
+  margin: 0 0 14px 0;
+  line-height: 1.8;
+  font-size: 15px;
+  color: var(--ll-text, #F1F5F9);
+}
+
+.ll-prose-list {
+  margin: 10px 0 16px 24px;
+  padding: 0;
+  line-height: 1.75;
+}
+
+.ll-prose-list-item {
+  margin-bottom: 6px;
+}
+
+.ll-prose-spacer {
+  height: 10px;
+}
+
+.ll-chem-formula {
+  font-family: inherit;
+  font-weight: 600;
+  color: #38BDF8;
+}
+
+.ll-prose-bold {
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+/* ─── LIGHT THEME OVERRIDES ─────────────────────────────────────────────────── */
+body.light-theme .math-block-container,
+[data-theme='light'] .math-block-container {
+  background: #EEF2FF;
+  border-color: #C7D2FE;
+  color: #0F172A;
+}
+
+body.light-theme .math-inline,
+[data-theme='light'] .math-inline {
+  color: #4F46E5;
+}
+
+body.light-theme .ll-table-wrapper,
+[data-theme='light'] .ll-table-wrapper {
+  background: #FFFFFF;
+  border-color: #E2E8F0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .ll-table th,
+[data-theme='light'] .ll-table th {
+  background: #EEF2FF;
+  color: #4338CA;
+  border-bottom-color: #E2E8F0;
+}
+
+body.light-theme .ll-table td,
+[data-theme='light'] .ll-table td {
+  border-bottom-color: #F1F5F9;
+  color: #0F172A;
+}
+
+body.light-theme .ll-prose-p,
+[data-theme='light'] .ll-prose-p {
+  color: #1E293B;
+}
+
+body.light-theme .ll-prose-bold,
+[data-theme='light'] .ll-prose-bold {
+  color: #0F172A;
+}
+
+body.light-theme .ll-blockquote,
+[data-theme='light'] .ll-blockquote {
+  background: #F0F4FF;
+  color: #3730A3;
+}
+
+body.light-theme .ll-code-block,
+[data-theme='light'] .ll-code-block {
+  background: #1E293B;
+  color: #F8FAFC;
+}
+
+/* ─── CONTEXTUAL GATE CE & ES HIGHLIGHTS ─────────────────────────────────────── */
+.ll-gate-ce-callout {
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  border-left: 4px solid #6366F1;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ll-gate-ce-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ll-gate-ce-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+}
+
+.ll-gate-ce-concept {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #F1F5F9;
+}
+
+.ll-gate-ce-body {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #94A3B8;
+  margin: 0;
+}
+
+.ll-gate-es-callout {
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-left: 4px solid #10B981;
+  border-radius: 10px;
+  padding: 12px 18px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #94A3B8;
+}
+
+.ll-gate-es-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10B981;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-right: 8px;
+}
+
+body.light-theme .ll-gate-ce-callout,
+[data-theme='light'] .ll-gate-ce-callout {
+  background: #F5F7FF;
+  border-color: #C7D2FE;
+  border-left-color: #6366F1;
+}
+
+body.light-theme .ll-gate-ce-concept,
+[data-theme='light'] .ll-gate-ce-concept {
+  color: #1E1B4B;
+}
+
+body.light-theme .ll-gate-ce-body,
+[data-theme='light'] .ll-gate-ce-body {
+  color: #334155;
+}
+
+body.light-theme .ll-gate-es-callout,
+[data-theme='light'] .ll-gate-es-callout {
+  background: #F0FDF4;
+  border-color: #A7F3D0;
+  border-left-color: #10B981;
+  color: #166534;
+}
+
+/* ─── MOBILE RESPONSIVENESS ─────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .ll-academy-container {
+    padding: 16px 12px 80px;
+  }
+  .ll-lang-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ll-check-container {
+    padding: 18px 16px;
+  }
+  .math-block-container {
+    padding: 12px 14px;
+    font-size: 14.5px;
+    justify-content: flex-start;
+  }
+  .ll-table {
+    font-size: 12.5px;
+  }
+  .ll-table th, .ll-table td {
+    padding: 10px 12px;
+  }
+}
+
