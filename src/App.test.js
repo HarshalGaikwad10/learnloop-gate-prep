@@ -810,6 +810,156 @@ describe('Visual Learning Mode for Unit 2 (Water Treatment Units)', () => {
   });
 });
 
+describe('AI Tutor Image Question Upload & Validation Suite', () => {
+  const { validateImageFile } = require('./utils/imageUtils');
+  const imageUtils = require('./utils/imageUtils');
+
+  test('validateImageFile accepts valid PNG, JPEG, and WebP files under 2 MB', () => {
+    const validPng = new File(['fake-png-data'], 'question.png', { type: 'image/png' });
+    Object.defineProperty(validPng, 'size', { value: 1024 * 500 }); // 500 KB
+
+    const validJpg = new File(['fake-jpg-data'], 'diagram.jpg', { type: 'image/jpeg' });
+    Object.defineProperty(validJpg, 'size', { value: 1024 * 1024 }); // 1 MB
+
+    const validWebp = new File(['fake-webp-data'], 'formula.webp', { type: 'image/webp' });
+    Object.defineProperty(validWebp, 'size', { value: 1024 * 200 }); // 200 KB
+
+    expect(validateImageFile(validPng)).toBeNull();
+    expect(validateImageFile(validJpg)).toBeNull();
+    expect(validateImageFile(validWebp)).toBeNull();
+  });
+
+  test('validateImageFile rejects unsupported file formats with helpful message', () => {
+    const gifFile = new File(['fake-gif'], 'animation.gif', { type: 'image/gif' });
+    const pdfFile = new File(['fake-pdf'], 'notes.pdf', { type: 'application/pdf' });
+    const txtFile = new File(['hello'], 'question.txt', { type: 'text/plain' });
+
+    expect(validateImageFile(gifFile)).toMatch(/Unsupported image format/i);
+    expect(validateImageFile(pdfFile)).toMatch(/Unsupported image format/i);
+    expect(validateImageFile(txtFile)).toMatch(/Unsupported image format/i);
+  });
+
+  test('validateImageFile rejects oversized files exceeding 10 MB', () => {
+    const largeFile = new File(['oversized'], 'large-scan.jpg', { type: 'image/jpeg' });
+    Object.defineProperty(largeFile, 'size', { value: 12 * 1024 * 1024 }); // 12 MB
+
+    const result = validateImageFile(largeFile);
+    expect(result).toMatch(/exceeds the 10 MB limit/i);
+  });
+
+  test('validateImageFile rejects empty 0-byte files', () => {
+    const emptyFile = new File([], 'empty.png', { type: 'image/png' });
+    Object.defineProperty(emptyFile, 'size', { value: 0 });
+
+    const result = validateImageFile(emptyFile);
+    expect(result).toMatch(/selected image file is empty/i);
+  });
+
+  test('Chatbot renders paperclip attach button and hidden file input with correct accept types', () => {
+    render(<Chatbot dark={true} user={{ name: 'Priya' }} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    const attachBtn = screen.getByTestId('chat-attach-btn');
+    expect(attachBtn).toBeInTheDocument();
+    expect(attachBtn).toHaveAttribute('aria-label', 'Attach question image');
+
+    const fileInput = screen.getByTestId('chat-file-input');
+    expect(fileInput).toBeInTheDocument();
+    expect(fileInput).toHaveAttribute('accept', 'image/png,image/jpeg,image/webp');
+  });
+
+  test('selecting an image displays preview and enables send button for image-only question', async () => {
+    // Mock processImageForUpload to resolve with sample processed image
+    jest.spyOn(imageUtils, 'processImageForUpload').mockResolvedValueOnce({
+      dataUrl: 'data:image/jpeg;base64,samplebase64data',
+      mimeType: 'image/jpeg',
+      base64Data: 'samplebase64data',
+      originalName: 'reinforcement_detail.jpg',
+      width: 1200,
+      height: 900,
+      sizeBytes: 150000
+    });
+
+    render(<Chatbot dark={true} user={{ name: 'Priya' }} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    const sendBtn = screen.getByTestId('chat-send-btn');
+    const input = screen.getByTestId('chat-input');
+    expect(sendBtn).toBeDisabled();
+
+    // Select file
+    const fileInput = screen.getByTestId('chat-file-input');
+    const sampleFile = new File(['dummy'], 'reinforcement_detail.jpg', { type: 'image/jpeg' });
+
+    fireEvent.change(fileInput, { target: { files: [sampleFile] } });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('chat-image-preview')).toBeInTheDocument();
+      expect(screen.getByText('reinforcement_detail.jpg')).toBeInTheDocument();
+      expect(screen.getByText(/1200×900px/i)).toBeInTheDocument();
+    });
+
+    // Send button should now be enabled even though input text is empty!
+    expect(input.value).toBe('');
+    expect(sendBtn).not.toBeDisabled();
+
+    // Clicking remove button should clear preview and disable send button
+    const removeBtn = screen.getByTestId('chat-image-remove-btn');
+    fireEvent.click(removeBtn);
+
+    expect(screen.queryByTestId('chat-image-preview')).not.toBeInTheDocument();
+    expect(sendBtn).toBeDisabled();
+
+    imageUtils.processImageForUpload.mockRestore();
+  });
+
+  test('displays error banner when an invalid file is selected', async () => {
+    jest.spyOn(imageUtils, 'processImageForUpload').mockRejectedValueOnce(
+      new Error('Unsupported image format. Please upload a PNG, JPEG/JPG, or WebP image.')
+    );
+
+    render(<Chatbot dark={true} user={{ name: 'Priya' }} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    const fileInput = screen.getByTestId('chat-file-input');
+    const invalidFile = new File(['dummy'], 'document.pdf', { type: 'application/pdf' });
+
+    fireEvent.change(fileInput, { target: { files: [invalidFile] } });
+
+    await waitFor(() => {
+      expect(screen.getByText(/Unsupported image format/i)).toBeInTheDocument();
+    });
+
+    imageUtils.processImageForUpload.mockRestore();
+  });
+
+  test('displays continue solution button when tutor response is marked as truncated', async () => {
+    const chatService = require('./services/chatService');
+    jest.spyOn(chatService, 'sendChatMessage').mockResolvedValueOnce({
+      reply: '### Step 1: Given Data\nPopulation = 50,000\n(Truncated)',
+      model: 'gemini-3.5-flash-lite',
+      finishReason: 'MAX_TOKENS',
+      isTruncated: true
+    });
+
+    render(<Chatbot dark={true} user={{ name: 'Priya' }} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    const input = screen.getByTestId('chat-input');
+    const sendBtn = screen.getByTestId('chat-send-btn');
+
+    fireEvent.change(input, { target: { value: 'Design slow sand filter beds' } });
+    fireEvent.click(sendBtn);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('chat-continue-btn')).toBeInTheDocument();
+      expect(screen.getByText(/▶ Continue Solution/i)).toBeInTheDocument();
+    });
+
+    chatService.sendChatMessage.mockRestore();
+  });
+});
+
 
 
 

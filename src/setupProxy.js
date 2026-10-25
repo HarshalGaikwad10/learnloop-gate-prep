@@ -8,10 +8,10 @@ try {
 } catch (e) {
   console.warn('[setupProxy] Warning: Could not load api/chat.js:', e.message);
 }
-
 module.exports = function (app) {
-  // Ensure JSON bodies are parsed for /api routes
-  app.use('/api', express.json());
+  // Ensure JSON bodies are parsed for /api routes with 10mb limit for image payloads
+  app.use('/api', express.json({ limit: '10mb' }));
+  app.use('/api', express.urlencoded({ extended: true, limit: '10mb' }));
 
   app.all('/api/chat', async (req, res) => {
     if (!chatHandler) {

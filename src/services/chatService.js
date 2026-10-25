@@ -1,7 +1,7 @@
 // src/services/chatService.js — Client-side service for LearnLoop AI Tutor & Understanding Evaluator
 
 const API_ENDPOINT = '/api/chat';
-const REQUEST_TIMEOUT_MS = 25000;
+const REQUEST_TIMEOUT_MS = 45000;
 
 /**
  * Sends conversation messages and active context to LearnLoop AI Tutor.
@@ -15,10 +15,19 @@ export async function sendChatMessage(messages, context = {}, externalSignal = n
   }
 
   try {
-    const payloadMessages = messages.map(m => ({
-      role: m.role === 'user' ? 'user' : 'assistant',
-      content: String(m.content || '').trim()
-    })).filter(m => m.content.length > 0);
+    const payloadMessages = messages.map(m => {
+      const msg = {
+        role: m.role === 'user' ? 'user' : 'assistant',
+        content: String(m.content || '').trim()
+      };
+      if (m.image) {
+        msg.image = {
+          mimeType: m.image.mimeType,
+          data: m.image.base64Data || m.image.data
+        };
+      }
+      return msg;
+    }).filter(m => m.content.length > 0 || m.image);
 
     const payload = {
       mode: 'chat',
@@ -66,12 +75,17 @@ export async function sendChatMessage(messages, context = {}, externalSignal = n
       return { error: 'The tutor returned an empty response. Please rephrase your query.' };
     }
 
-    return { reply: data.reply, model: data.model };
+    return {
+      reply: data.reply,
+      model: data.model,
+      finishReason: data.finishReason,
+      isTruncated: !!data.isTruncated
+    };
 
   } catch (err) {
     clearTimeout(timeoutId);
     if (err.name === 'AbortError') {
-      return { error: 'Request timed out after 25 seconds. Please check your connection and try again.' };
+      return { error: 'Request timed out after 45 seconds. Please check your connection and try again.' };
     }
     return {
       error: err.message || 'Unable to connect to LearnLoop AI Tutor. Please check your network connection.'

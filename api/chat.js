@@ -61,15 +61,31 @@ MATHEMATICAL & MARKDOWN FORMATTING RULES:
 - Format all standalone block equations using double dollar signs: $$...$$ (e.g. $$G = \\sqrt{\\frac{P}{\\mu \\cdot V}}$$, $$v_s = \\frac{g(\\rho_s - \\rho)d^2}{18\\mu}$$).
 - Format inline math, Greek symbols, and variables using single dollar signs: $...$ (e.g. $G$, $t$, $\\mu$, $d_{10}$, $C_u$, $\\theta$).
 - Use Markdown tables with pipes (| Column 1 | Column 2 |) for comparative summaries.
-- Never output raw unescaped HTML.`;
+- Never output raw unescaped HTML.
+
+AI TEACHER INSTRUCTIONS FOR UPLOADED QUESTIONS & DIAGRAMS (CRITICAL):
+When a student uploads an image (textbook question photo, handwritten problem, exam screenshot, formula, table, or engineering diagram):
+1. Carefully inspect the image and identify the exact Civil Engineering question and topic visible in the uploaded image.
+2. Extract all given data and units under a distinct "### Given Data" section.
+3. Clearly state what must be calculated or designed under a "### To Determine / Design Goal" section.
+4. Select appropriate formulas, cite standard Indian codes (IS 10500, IS 456, IS 1172, CPHEEO Manual) where applicable, and explain their engineering applicability under "### Governing Formula(s)".
+5. Substitute the actual given values directly into the formulas.
+6. Complete all calculations with rigorous intermediate steps under "### Step-by-Step Calculation". Show all arithmetic without skipping stages.
+7. Include engineering units throughout every calculation step and provide a clearly labelled final answer with units under "### Final Answer".
+8. Address all parts of the question, including required diagrams, plan arrangements, layouts, or dimensions (e.g. for filter beds, state the number of beds, length, breadth, and their spatial layout in plan).
+9. If essential information or numbers in the image are illegible or ambiguous, ask the student for clarification rather than guessing or fabricating missing values.
+10. Strictly avoid switching to an unrelated example or previous chat topic when the submitted question in the image is readable.
+For long or complex design problems, use clear structured sections: Given Data, Governing Formula(s), Calculation, Design Dimensions, Plan Arrangement / Layout, and Final Answer.`;
+
+const ALLOWED_IMAGE_MIME_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/pjpeg', 'image/webp'];
+const MAX_IMAGE_BASE64_BYTES = 3.5 * 1024 * 1024; // 3.5 MB max base64 size (under Vercel's 4.5MB request limit)
 
 // Candidate Gemini models verified for v1beta availability
 const CANDIDATE_MODELS = [
-  'gemini-3.5-flash',       // Primary: fast, currently available and highly stable
-  'gemini-3.5-flash-lite',  // Fast fallback
+  'gemini-3.5-flash-lite',  // Primary: fast, highly accurate multimodal without reasoning token exhaustion
+  'gemini-3.8-flash',       // Advanced multimodal fallback
   'gemini-flash-latest',    // Reliable alias fallback
-  'gemini-3.8-flash',       // Advanced fallback
-  'gemini-3.7-flash'        // Secondary fallback
+  'gemini-3.5-flash'        // Secondary fallback
 ];
 
 // Call Gemini API via HTTPS with bounded model fallback and retry backoff
@@ -93,7 +109,7 @@ function callGemini(apiKey, payload) {
           'Content-Type': 'application/json',
           'Content-Length': Buffer.byteLength(body)
         },
-        timeout: 20000 // 20s per candidate
+        timeout: 35000 // 35s per candidate to support detailed engineering calculations
       }, (res) => {
         let responseData = '';
         res.on('data', chunk => responseData += chunk);
@@ -102,9 +118,18 @@ function callGemini(apiKey, payload) {
             const parsed = JSON.parse(responseData);
 
             if (res.statusCode >= 200 && res.statusCode < 300) {
-              const replyText = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
+              const candidate = parsed.candidates?.[0];
+              const finishReason = candidate?.finishReason || 'STOP';
+              const parts = candidate?.content?.parts || [];
+              const replyText = parts.filter(p => p.text).map(p => p.text).join('');
+
               if (replyText) {
-                return resolve({ text: replyText, model });
+                return resolve({
+                  text: replyText,
+                  model,
+                  finishReason,
+                  isTruncated: finishReason === 'MAX_TOKENS'
+                });
               }
             }
 
@@ -369,6 +394,8 @@ EVALUATION INSTRUCTIONS:
       // Fallback gracefully
       return res.status(200).json(evaluateFallback(studentAnswer, rubric));
     }
+  }
+
   // ── ROUTE 2: AI CONCEPT ILLUSTRATION (Visual Learning Mode) ──
   if (body.action === 'generate_concept_illustration') {
     const { lessonTitle, topic } = body;
@@ -427,8 +454,56 @@ List 3 key physical stages, primary hydraulic parameters, and critical design ch
     const boundedMessages = messages.slice(-10);
     const lastUserMessage = boundedMessages[boundedMessages.length - 1];
 
-    if (!lastUserMessage || !lastUserMessage.content || typeof lastUserMessage.content !== 'string') {
-      return res.status(400).json({ error: 'Latest message must contain valid text content.' });
+    if (!lastUserMessage || typeof lastUserMessage !== 'object') {
+      return res.status(400).json({ error: 'Latest message is invalid.' });
+    }
+
+    // Check for image attachment either on the message object or in the request body
+    const attachedImage = lastUserMessage.image || body.image || null;
+    let validatedImage = null;
+
+    if (attachedImage) {
+      if (typeof attachedImage !== 'object' || !attachedImage.mimeType || !attachedImage.data) {
+        return res.status(400).json({ error: 'Malformed image attachment: "mimeType" and "data" fields are required.' });
+      }
+
+      let mimeType = String(attachedImage.mimeType).toLowerCase().trim();
+      if (!ALLOWED_IMAGE_MIME_TYPES.includes(mimeType)) {
+        return res.status(400).json({
+          error: `Unsupported image format (${mimeType}). Please upload a PNG, JPEG/JPG, or WebP image.`
+        });
+      }
+
+      // Normalize MIME type for upstream Gemini API compatibility
+      if (mimeType === 'image/jpg' || mimeType === 'image/pjpeg') {
+        mimeType = 'image/jpeg';
+      }
+
+      const base64Data = String(attachedImage.data).replace(/^data:image\/[a-z0-9+.-]+;base64,/, '').trim();
+      if (!base64Data) {
+        return res.status(400).json({ error: 'The uploaded image data is empty or invalid.' });
+      }
+
+      // Check decoded size (base64 length * 3/4)
+      const approximateBytes = Math.round((base64Data.length * 3) / 4);
+      if (approximateBytes > MAX_IMAGE_BASE64_BYTES) {
+        return res.status(413).json({
+          error: 'Image payload exceeds the safe 3.5 MB transfer limit. Please upload a smaller or compressed image.'
+        });
+      }
+
+      validatedImage = {
+        mimeType,
+        data: base64Data
+      };
+    }
+
+    // Safe diagnostic logging (only logs metadata, never raw base64 or API keys)
+    console.log(`[LearnLoop AI] Request received - image: ${!!validatedImage}, mime: ${validatedImage?.mimeType || 'none'}, approxBytes: ${validatedImage ? Math.round((validatedImage.data.length * 3) / 4) : 0}, messages: ${boundedMessages.length}`);
+
+    const textContent = typeof lastUserMessage.content === 'string' ? lastUserMessage.content.trim() : '';
+    if (!validatedImage && !textContent) {
+      return res.status(400).json({ error: 'Please enter a message or upload an image question.' });
     }
 
     // Build context prompt
@@ -457,31 +532,65 @@ List 3 key physical stages, primary hydraulic parameters, and critical design ch
     }
 
     const contents = [];
-    const initialInstruction = `${BASE_TUTOR_INSTRUCTION}${contextPrompt}\n\nPlease mentor and instruct the student accordingly.`;
 
     boundedMessages.forEach((m, idx) => {
+      const isLast = idx === boundedMessages.length - 1;
       const role = m.role === 'assistant' || m.role === 'tutor' ? 'model' : 'user';
-      let text = String(m.content || '').slice(0, 2500);
-      if (idx === 0 && role === 'user') {
-        text = `${initialInstruction}\n\nStudent Query: ${text}`;
+      let text = String(m.content || '').slice(0, 3000);
+
+      const parts = [];
+
+      // Attach image to the current user prompt if present
+      if (isLast && role === 'user' && validatedImage) {
+        parts.push({
+          inlineData: {
+            mimeType: validatedImage.mimeType,
+            data: validatedImage.data
+          }
+        });
+
+        text = `[ATTACHED QUESTION IMAGE]\n` +
+          `CRITICAL DIRECTIVE: The student has uploaded an image containing a Civil Engineering question.\n` +
+          `You MUST inspect the attached image, identify the exact question and given parameters shown in the image, and solve that exact problem step by step.\n` +
+          `DO NOT answer previous unrelated conversation topics (such as one-way/two-way slabs or earlier questions) unless the student explicitly asks to compare them in their note.\n` +
+          `If the image is blurry, corrupted, or missing essential values, ask the student for clarification instead of inventing numbers.\n` +
+          (text.trim() ? `Student's accompanying instruction: "${text}"` : `Please provide the complete step-by-step engineering design and calculation based strictly on the image.`);
       }
-      contents.push({ role, parts: [{ text }] });
+
+      if (text.trim() || parts.length === 0) {
+        parts.push({ text: text || 'Hello Tutor!' });
+      }
+
+      contents.push({ role, parts });
     });
 
     if (contents.length > 0 && contents[0].role !== 'user') {
-      contents.unshift({ role: 'user', parts: [{ text: `${initialInstruction}\n\nHello Tutor!` }] });
+      contents.unshift({ role: 'user', parts: [{ text: 'Hello Tutor!' }] });
     }
 
     const geminiPayload = {
+      systemInstruction: {
+        parts: [{ text: `${BASE_TUTOR_INSTRUCTION}${contextPrompt}` }]
+      },
       contents,
-      generationConfig: { maxOutputTokens: 1400, temperature: 0.6 }
+      generationConfig: {
+        maxOutputTokens: 4096,
+        temperature: 0.2
+      }
     };
 
     const result = await callGemini(apiKey, geminiPayload);
 
+    let reply = result.text;
+    if (result.isTruncated) {
+      reply += '\n\n*(Note: This response reached the output length limit. Click "Continue Solution" below to see the remaining calculations and plan arrangement.)*';
+    }
+
     return res.status(200).json({
-      reply: result.text,
-      model: result.model
+      reply,
+      model: result.model,
+      finishReason: result.finishReason,
+      isTruncated: !!result.isTruncated
     });
 
   } catch (error) {
