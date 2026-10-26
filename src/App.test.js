@@ -960,6 +960,253 @@ describe('AI Tutor Image Question Upload & Validation Suite', () => {
   });
 });
 
+describe('Chatbot Display Modes (Normal, Expanded, Full-Screen)', () => {
+  test('defaults to normal floating mode without backdrop or mode badge', () => {
+    render(<Chatbot dark={true} user={{ name: 'Engineer' }} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    const panel = screen.getByTestId('chat-panel');
+    expect(panel).toHaveClass('mode-normal');
+    expect(screen.queryByTestId('chat-backdrop')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('chat-mode-badge')).not.toBeInTheDocument();
+
+    const expandBtn = screen.getByTestId('chat-expand-btn');
+    const fullscreenBtn = screen.getByTestId('chat-fullscreen-btn');
+    expect(expandBtn).toHaveAttribute('title', expect.stringMatching(/expand/i));
+    expect(fullscreenBtn).toHaveAttribute('title', expect.stringMatching(/full-screen/i));
+  });
+
+  test('toggles to expanded mode, displays backdrop, and restores to normal mode', () => {
+    render(<Chatbot dark={true} user={{ name: 'Engineer' }} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    const panel = screen.getByTestId('chat-panel');
+    const expandBtn = screen.getByTestId('chat-expand-btn');
+
+    // Click Expand
+    fireEvent.click(expandBtn);
+    expect(panel).toHaveClass('mode-expanded');
+    expect(screen.getByTestId('chat-backdrop')).toBeInTheDocument();
+    expect(screen.getByTestId('chat-mode-badge')).toHaveTextContent(/expanded/i);
+    expect(expandBtn).toHaveAttribute('title', expect.stringMatching(/restore/i));
+
+    // Click Expand again to restore normal mode
+    fireEvent.click(expandBtn);
+    expect(panel).toHaveClass('mode-normal');
+    expect(screen.queryByTestId('chat-backdrop')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('chat-mode-badge')).not.toBeInTheDocument();
+  });
+
+  test('restores normal mode when clicking on the expanded mode backdrop', () => {
+    render(<Chatbot dark={true} user={{ name: 'Engineer' }} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    const panel = screen.getByTestId('chat-panel');
+    const expandBtn = screen.getByTestId('chat-expand-btn');
+
+    fireEvent.click(expandBtn);
+    expect(panel).toHaveClass('mode-expanded');
+
+    const backdrop = screen.getByTestId('chat-backdrop');
+    fireEvent.click(backdrop);
+
+    expect(panel).toHaveClass('mode-normal');
+    expect(screen.queryByTestId('chat-backdrop')).not.toBeInTheDocument();
+  });
+
+  test('toggles to full-screen mode and steps down cleanly with Escape key', () => {
+    render(<Chatbot dark={true} user={{ name: 'Engineer' }} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    const panel = screen.getByTestId('chat-panel');
+    const fullscreenBtn = screen.getByTestId('chat-fullscreen-btn');
+
+    // Enter Fullscreen
+    fireEvent.click(fullscreenBtn);
+    expect(panel).toHaveClass('mode-fullscreen');
+    expect(screen.getByTestId('chat-mode-badge')).toHaveTextContent(/full screen/i);
+    expect(fullscreenBtn).toHaveAttribute('title', expect.stringMatching(/exit/i));
+
+    // Press Escape -> steps down to expanded
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(panel).toHaveClass('mode-expanded');
+    expect(screen.getByTestId('chat-mode-badge')).toHaveTextContent(/expanded/i);
+
+    // Press Escape again -> steps down to normal
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(panel).toHaveClass('mode-normal');
+    expect(screen.queryByTestId('chat-mode-badge')).not.toBeInTheDocument();
+  });
+
+  test('preserves user input text and chat state across display mode switches', () => {
+    render(<Chatbot dark={true} user={{ name: 'Engineer' }} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    const input = screen.getByTestId('chat-input');
+    fireEvent.change(input, { target: { value: 'Design 6 slow sand filter beds' } });
+
+    const expandBtn = screen.getByTestId('chat-expand-btn');
+    const fullscreenBtn = screen.getByTestId('chat-fullscreen-btn');
+
+    // Switch to expanded
+    fireEvent.click(expandBtn);
+    expect(input.value).toBe('Design 6 slow sand filter beds');
+
+    // Switch to fullscreen
+    fireEvent.click(fullscreenBtn);
+    expect(input.value).toBe('Design 6 slow sand filter beds');
+
+    // Restore to normal
+    fireEvent.click(fullscreenBtn);
+    expect(input.value).toBe('Design 6 slow sand filter beds');
+  });
+});
+
+describe('Gemini API Authentication & Upstream Error Classification Suite', () => {
+  const chatHandler = require('../api/chat');
+
+  function createMockReqRes(body, envKey = 'mock-key') {
+    const originalKey = process.env.GEMINI_API_KEY;
+    if (envKey === null) {
+      delete process.env.GEMINI_API_KEY;
+    } else {
+      process.env.GEMINI_API_KEY = envKey;
+    }
+
+    const req = {
+      method: 'POST',
+      headers: { 'x-forwarded-for': '127.0.0.1' },
+      body
+    };
+
+    let statusCode = 200;
+    let jsonResponse = null;
+
+    const res = {
+      setHeader: jest.fn(),
+      status: (code) => {
+        statusCode = code;
+        return res;
+      },
+      json: (data) => {
+        jsonResponse = data;
+        return res;
+      },
+      end: jest.fn()
+    };
+
+    const cleanup = () => {
+      if (originalKey === undefined) {
+        delete process.env.GEMINI_API_KEY;
+      } else {
+        process.env.GEMINI_API_KEY = originalKey;
+      }
+    };
+
+    return { req, res, getStatus: () => statusCode, getBody: () => jsonResponse, cleanup };
+  }
+
+  test('reports clear 503 error when GEMINI_API_KEY is not configured on the server', async () => {
+    const { req, res, getStatus, getBody, cleanup } = createMockReqRes(
+      { messages: [{ role: 'user', content: 'What is Abram law?' }] },
+      null // No key
+    );
+
+    try {
+      await chatHandler(req, res);
+      expect(getStatus()).toBe(503);
+      expect(getBody().error).toMatch(/GEMINI_API_KEY is not configured on the server/i);
+      expect(getBody().error).toMatch(/Vercel/i);
+    } finally {
+      cleanup();
+    }
+  });
+
+  test('sanitizes GEMINI_API_KEY by trimming quotes and whitespace', async () => {
+    // Key wrapped with quotes and whitespace
+    const { req, res, getStatus, getBody, cleanup } = createMockReqRes(
+      { messages: [{ role: 'user', content: '' }] }, // empty message triggers 400 validation after key check
+      '  "AIzaSyDummyKeyWithQuotes"  '
+    );
+
+    try {
+      await chatHandler(req, res);
+      // If it passed the key check, it reaches message validation: 400
+      expect(getStatus()).toBe(400);
+      expect(getBody().error).toMatch(/Please enter a message or upload an image question/i);
+    } finally {
+      cleanup();
+    }
+  });
+
+  test('displays safe frontend error when Gemini API returns invalid key failure (401)', async () => {
+    const chatService = require('./services/chatService');
+    jest.spyOn(chatService, 'sendChatMessage').mockResolvedValueOnce({
+      error: 'Gemini API key is invalid or has expired. Please verify GEMINI_API_KEY in Vercel settings.'
+    });
+
+    render(<Chatbot dark={true} user={{ name: 'Engineer' }} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    const input = screen.getByTestId('chat-input');
+    const sendBtn = screen.getByTestId('chat-send-btn');
+    fireEvent.change(input, { target: { value: 'Explain BOD kinetics' } });
+    fireEvent.click(sendBtn);
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toBeInTheDocument();
+      expect(screen.getByText(/Gemini API key is invalid or has expired/i)).toBeInTheDocument();
+      expect(screen.getByTestId('chat-retry-btn')).toBeInTheDocument();
+    });
+
+    chatService.sendChatMessage.mockRestore();
+  });
+
+  test('displays safe frontend error when Gemini API returns key restriction error (403)', async () => {
+    const chatService = require('./services/chatService');
+    jest.spyOn(chatService, 'sendChatMessage').mockResolvedValueOnce({
+      error: 'Gemini API key restriction error: Serverless requests from this origin/IP are blocked. In Google Cloud Console, ensure Application Restrictions are set to "None".'
+    });
+
+    render(<Chatbot dark={true} user={{ name: 'Engineer' }} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    const input = screen.getByTestId('chat-input');
+    const sendBtn = screen.getByTestId('chat-send-btn');
+    fireEvent.change(input, { target: { value: 'Calculate settling velocity' } });
+    fireEvent.click(sendBtn);
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toBeInTheDocument();
+      expect(screen.getByText(/Gemini API key restriction error/i)).toBeInTheDocument();
+    });
+
+    chatService.sendChatMessage.mockRestore();
+  });
+
+  test('displays safe frontend error when rate limit / quota is exceeded (429)', async () => {
+    const chatService = require('./services/chatService');
+    jest.spyOn(chatService, 'sendChatMessage').mockResolvedValueOnce({
+      error: 'LearnLoop AI rate limit or quota exceeded. Please wait a moment before sending another question.'
+    });
+
+    render(<Chatbot dark={true} user={{ name: 'Engineer' }} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    const input = screen.getByTestId('chat-input');
+    const sendBtn = screen.getByTestId('chat-send-btn');
+    fireEvent.change(input, { target: { value: 'Explain Stokes Law' } });
+    fireEvent.click(sendBtn);
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toBeInTheDocument();
+      expect(screen.getByText(/rate limit or quota exceeded/i)).toBeInTheDocument();
+    });
+
+    chatService.sendChatMessage.mockRestore();
+  });
+});
+
 
 
 

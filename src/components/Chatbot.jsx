@@ -5,6 +5,45 @@ import { processImageForUpload } from '../utils/imageUtils';
 import FormattedContent from './common/FormattedContent';
 import '../styles/chatbot.css';
 
+// Mode transition SVG icons matching feather / lucide style
+function Maximize2Icon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polyline points="15 3 21 3 21 9" />
+      <polyline points="9 21 3 21 3 15" />
+      <line x1="21" y1="3" x2="14" y2="10" />
+      <line x1="3" y1="21" x2="10" y2="14" />
+    </svg>
+  );
+}
+
+function Minimize2Icon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polyline points="4 14 10 14 10 20" />
+      <polyline points="20 10 14 10 14 4" />
+      <line x1="14" y1="10" x2="21" y2="3" />
+      <line x1="3" y1="21" x2="10" y2="14" />
+    </svg>
+  );
+}
+
+function FullscreenIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+    </svg>
+  );
+}
+
+function ExitFullscreenIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+    </svg>
+  );
+}
+
 export default function Chatbot({
   dark = true,
   user = null,
@@ -12,6 +51,7 @@ export default function Chatbot({
   onNavigate = null
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [displayMode, setDisplayMode] = useState('normal'); // 'normal' | 'expanded' | 'fullscreen'
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [attachedImage, setAttachedImage] = useState(null);
@@ -42,7 +82,50 @@ export default function Chatbot({
     if (isOpen && typeof messagesEndRef.current?.scrollIntoView === 'function') {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages, loading, isOpen]);
+  }, [messages, loading, isOpen, displayMode]);
+
+  // Prevent background body scrolling when chatbot is in expanded or full-screen mode
+  useEffect(() => {
+    if (isOpen && (displayMode === 'expanded' || displayMode === 'fullscreen')) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, [isOpen, displayMode]);
+
+  // Keyboard navigation: Escape key exits fullscreen/expanded back to normal
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        if (displayMode === 'fullscreen') {
+          setDisplayMode('expanded');
+        } else if (displayMode === 'expanded') {
+          setDisplayMode('normal');
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, displayMode]);
+
+  // Mode togglers
+  const handleToggleExpand = () => {
+    if (displayMode === 'expanded') {
+      setDisplayMode('normal');
+    } else {
+      setDisplayMode('expanded');
+    }
+  };
+
+  const handleToggleFullscreen = () => {
+    if (displayMode === 'fullscreen') {
+      setDisplayMode('normal');
+    } else {
+      setDisplayMode('fullscreen');
+    }
+  };
 
   // Reset dismissed context when context changes significantly
   useEffect(() => {
@@ -281,7 +364,20 @@ export default function Chatbot({
   ];
 
   return (
-    <div className={`ll-chatbot-root ${dark ? 'dark' : 'light'}`} data-testid="chatbot-root">
+    <div
+      className={`ll-chatbot-root ${dark ? 'dark' : 'light'} mode-${displayMode}`}
+      data-testid="chatbot-root"
+    >
+      {/* ── Backdrop Overlay for Expanded Mode ── */}
+      {isOpen && displayMode === 'expanded' && (
+        <div
+          className="ll-chat-backdrop"
+          onClick={() => setDisplayMode('normal')}
+          aria-label="Restore standard size"
+          data-testid="chat-backdrop"
+        />
+      )}
+
       {/* ── Floating Launcher ── */}
       {!isOpen && (
         <button
@@ -301,7 +397,12 @@ export default function Chatbot({
 
       {/* ── Chat Panel ── */}
       {isOpen && (
-        <div className="ll-chat-panel" role="region" aria-label="LearnLoop AI Tutor panel" data-testid="chat-panel">
+        <div
+          className={`ll-chat-panel mode-${displayMode}`}
+          role="region"
+          aria-label="LearnLoop AI Tutor panel"
+          data-testid="chat-panel"
+        >
           {/* Header */}
           <div className="ll-chat-header">
             <div className="ll-header-left">
@@ -310,12 +411,40 @@ export default function Chatbot({
                 <h3 className="ll-header-title">
                   LearnLoop AI Tutor
                   <span className="ll-header-status" title="Active" />
+                  {displayMode !== 'normal' && (
+                    <span className="ll-mode-badge" data-testid="chat-mode-badge">
+                      {displayMode === 'fullscreen' ? 'Full Screen' : 'Expanded'}
+                    </span>
+                  )}
                 </h3>
                 <p className="ll-header-sub">GATE Civil Engineering Teacher</p>
               </div>
             </div>
 
             <div className="ll-header-actions">
+              {/* Expand / Restore Button */}
+              <button
+                className={`ll-icon-btn ${displayMode === 'expanded' ? 'active' : ''}`}
+                onClick={handleToggleExpand}
+                title={displayMode === 'expanded' ? 'Restore standard size' : 'Expand view (88% screen)'}
+                aria-label={displayMode === 'expanded' ? 'Restore standard size' : 'Expand chat panel'}
+                data-testid="chat-expand-btn"
+              >
+                {displayMode === 'expanded' ? <Minimize2Icon /> : <Maximize2Icon />}
+              </button>
+
+              {/* Full-screen Button */}
+              <button
+                className={`ll-icon-btn ${displayMode === 'fullscreen' ? 'active' : ''}`}
+                onClick={handleToggleFullscreen}
+                title={displayMode === 'fullscreen' ? 'Exit full screen' : 'Full-screen mode'}
+                aria-label={displayMode === 'fullscreen' ? 'Exit full screen' : 'Full-screen mode'}
+                data-testid="chat-fullscreen-btn"
+              >
+                {displayMode === 'fullscreen' ? <ExitFullscreenIcon /> : <FullscreenIcon />}
+              </button>
+
+              {/* Reset Conversation Button */}
               <button
                 className="ll-icon-btn"
                 onClick={handleReset}
@@ -325,6 +454,8 @@ export default function Chatbot({
               >
                 🔄
               </button>
+
+              {/* Minimize / Close Button */}
               <button
                 className="ll-icon-btn"
                 onClick={() => setIsOpen(false)}
