@@ -124,22 +124,22 @@ export default function CourseCatalogueView({
           >
             <div>
               <div style={{ fontSize: 20, fontWeight: 800, color: '#818CF8' }}>10</div>
-              <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 600 }}>Disciplines</div>
+              <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', fontWeight: 600 }}>Disciplines</div>
             </div>
             <div style={{ width: 1, background: dark ? '#334155' : '#CBD5E1' }} />
             <div>
               <div style={{ fontSize: 20, fontWeight: 800, color: '#10B981' }}>417</div>
-              <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 600 }}>Planned Hours</div>
+              <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', fontWeight: 600 }}>Planned Hours</div>
             </div>
             <div style={{ width: 1, background: dark ? '#334155' : '#CBD5E1' }} />
             <div>
               <div style={{ fontSize: 20, fontWeight: 800, color: '#F59E0B' }}>52</div>
-              <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 600 }}>Modules</div>
+              <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', fontWeight: 600 }}>Modules</div>
             </div>
             <div style={{ width: 1, background: dark ? '#334155' : '#CBD5E1' }} />
             <div>
               <div style={{ fontSize: 20, fontWeight: 800, color: '#6366F1' }}>1 Active Pilot</div>
-              <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 600 }}>Interactive System</div>
+              <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', fontWeight: 600 }}>Interactive System</div>
             </div>
           </div>
         </div>
@@ -262,7 +262,7 @@ export default function CourseCatalogueView({
           alignItems: 'center',
           marginBottom: 20,
           fontSize: 13,
-          color: '#94A3B8',
+          color: dark ? '#94A3B8' : '#475569',
         }}
       >
         <span>
@@ -280,7 +280,7 @@ export default function CourseCatalogueView({
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#818CF8',
+              color: dark ? '#818CF8' : '#4338CA',
               fontSize: 12.5,
               fontWeight: 600,
               cursor: 'pointer',
@@ -314,7 +314,7 @@ export default function CourseCatalogueView({
           >
             No courses found
           </h3>
-          <p style={{ color: '#94A3B8', fontSize: 14, margin: '0 0 16px 0' }}>
+          <p style={{ color: dark ? '#94A3B8' : '#475569', fontSize: 14, margin: '0 0 16px 0' }}>
             We could not find any course matching your current search or category filter.
           </p>
           <button

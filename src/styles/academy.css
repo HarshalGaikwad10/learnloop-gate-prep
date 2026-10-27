@@ -104,13 +104,14 @@
 .ll-lesson-prose h2, .ll-lesson-prose h3, .ll-lesson-prose h4 {
   font-family: 'Outfit', sans-serif;
   font-weight: 700;
-  color: var(--ll-text, #FFFFFF);
+  color: var(--ll-heading, #FFFFFF);
   margin-top: 28px;
   margin-bottom: 12px;
 }
 
-.ll-lesson-prose h2 { font-size: 22px; border-bottom: 1px solid var(--ll-border, #1E293B); padding-bottom: 8px; }
-.ll-lesson-prose h3 { font-size: 18px; color: #818CF8; }
+.ll-lesson-prose h2 { font-size: 22px; border-bottom: 1px solid var(--ll-border, #1E293B); padding-bottom: 8px; color: var(--ll-heading, #FFFFFF); }
+.ll-lesson-prose h3 { font-size: 18px; color: var(--ll-heading-accent, #818CF8); }
+.ll-lesson-prose h4 { font-size: 15px; color: var(--ll-heading-accent, #A5B4FC); }
 
 .ll-lesson-prose p {
   margin-bottom: 16px;
@@ -235,14 +236,35 @@
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
+body.light-theme .ll-feedback-box.understood,
+[data-theme='light'] .ll-feedback-box.understood {
+  background: #ECFDF5;
+  border-color: #A7F3D0;
+  color: #065F46;
+}
+
 .ll-feedback-box.partial {
   background: rgba(245, 158, 11, 0.08);
   border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
+body.light-theme .ll-feedback-box.partial,
+[data-theme='light'] .ll-feedback-box.partial {
+  background: #FFFBEB;
+  border-color: #FDE68A;
+  color: #92400E;
+}
+
 .ll-feedback-box.needs_reteaching {
   background: rgba(239, 68, 68, 0.08);
   border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+body.light-theme .ll-feedback-box.needs_reteaching,
+[data-theme='light'] .ll-feedback-box.needs_reteaching {
+  background: #FEF2F2;
+  border-color: #FECACA;
+  color: #991B1B;
 }
 
 .ll-feedback-title {
@@ -700,7 +722,7 @@ body.light-theme .ll-process-connector {
   font-size: 26px;
   font-weight: 800;
   margin: 28px 0 14px;
-  color: var(--ll-text, #F1F5F9);
+  color: var(--ll-heading, #F1F5F9);
 }
 
 .ll-prose-h2 {
@@ -708,7 +730,7 @@ body.light-theme .ll-process-connector {
   font-size: 20px;
   font-weight: 700;
   margin: 24px 0 12px;
-  color: var(--ll-text, #F1F5F9);
+  color: var(--ll-heading, #F1F5F9);
   border-bottom: 1px solid var(--ll-border, #1E293B);
   padding-bottom: 6px;
 }
@@ -718,7 +740,7 @@ body.light-theme .ll-process-connector {
   font-size: 17px;
   font-weight: 700;
   margin: 20px 0 10px;
-  color: #818CF8;
+  color: var(--ll-heading-accent, #818CF8);
 }
 
 .ll-prose-h4 {
@@ -726,7 +748,7 @@ body.light-theme .ll-process-connector {
   font-size: 14.5px;
   font-weight: 700;
   margin: 16px 0 8px;
-  color: #A5B4FC;
+  color: var(--ll-heading-accent, #A5B4FC);
 }
 
 .ll-prose-p {
@@ -740,6 +762,7 @@ body.light-theme .ll-process-connector {
   margin: 10px 0 16px 24px;
   padding: 0;
   line-height: 1.75;
+  color: var(--ll-text, #F1F5F9);
 }
 
 .ll-prose-list-item {
@@ -753,67 +776,195 @@ body.light-theme .ll-process-connector {
 .ll-chem-formula {
   font-family: inherit;
   font-weight: 600;
-  color: #38BDF8;
+  color: var(--ll-math-inline-text, #38BDF8);
 }
 
 .ll-prose-bold {
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--ll-heading, #FFFFFF);
 }
 
 /* ─── LIGHT THEME OVERRIDES ─────────────────────────────────────────────────── */
+body.light-theme,
+[data-theme='light'] {
+  color: #0F172A;
+}
+
+body.light-theme .ll-prose-h1,
+[data-theme='light'] .ll-prose-h1,
+body.light-theme .ll-prose-h2,
+[data-theme='light'] .ll-prose-h2,
+body.light-theme .ll-lesson-prose h2,
+[data-theme='light'] .ll-lesson-prose h2 {
+  color: #0F172A;
+  border-bottom-color: #CBD5E1;
+}
+
+body.light-theme .ll-prose-h3,
+[data-theme='light'] .ll-prose-h3,
+body.light-theme .ll-lesson-prose h3,
+[data-theme='light'] .ll-lesson-prose h3 {
+  color: #4338CA;
+}
+
+body.light-theme .ll-prose-h4,
+[data-theme='light'] .ll-prose-h4,
+body.light-theme .ll-lesson-prose h4,
+[data-theme='light'] .ll-lesson-prose h4 {
+  color: #312E81;
+}
+
+body.light-theme .ll-prose-p,
+[data-theme='light'] .ll-prose-p,
+body.light-theme .ll-lesson-prose p,
+[data-theme='light'] .ll-lesson-prose p {
+  color: #1E293B;
+}
+
+body.light-theme .ll-prose-list,
+[data-theme='light'] .ll-prose-list,
+body.light-theme .ll-lesson-prose ul,
+[data-theme='light'] .ll-lesson-prose ul,
+body.light-theme .ll-lesson-prose ol,
+[data-theme='light'] .ll-lesson-prose ol {
+  color: #1E293B;
+}
+
+body.light-theme .ll-prose-bold,
+[data-theme='light'] .ll-prose-bold,
+body.light-theme .ll-lesson-prose strong,
+[data-theme='light'] .ll-lesson-prose strong {
+  color: #0F172A;
+  font-weight: 700;
+}
+
+body.light-theme .ll-chem-formula,
+[data-theme='light'] .ll-chem-formula {
+  color: #0284C7;
+  font-weight: 700;
+}
+
 body.light-theme .math-block-container,
 [data-theme='light'] .math-block-container {
   background: #EEF2FF;
   border-color: #C7D2FE;
-  color: #0F172A;
+  color: #312E81;
 }
 
 body.light-theme .math-inline,
 [data-theme='light'] .math-inline {
-  color: #4F46E5;
+  color: #4338CA;
+}
+
+body.light-theme .math-symbol,
+[data-theme='light'] .math-symbol {
+  color: #4338CA;
+}
+
+body.light-theme .math-fn,
+[data-theme='light'] .math-fn {
+  color: #312E81;
+}
+
+body.light-theme .katex,
+[data-theme='light'] .katex {
+  color: #312E81 !important;
 }
 
 body.light-theme .ll-table-wrapper,
 [data-theme='light'] .ll-table-wrapper {
   background: #FFFFFF;
-  border-color: #E2E8F0;
+  border-color: #CBD5E1;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 body.light-theme .ll-table th,
 [data-theme='light'] .ll-table th {
   background: #EEF2FF;
-  color: #4338CA;
-  border-bottom-color: #E2E8F0;
+  color: #312E81;
+  border-bottom-color: #CBD5E1;
 }
 
 body.light-theme .ll-table td,
 [data-theme='light'] .ll-table td {
-  border-bottom-color: #F1F5F9;
-  color: #0F172A;
-}
-
-body.light-theme .ll-prose-p,
-[data-theme='light'] .ll-prose-p {
-  color: #1E293B;
-}
-
-body.light-theme .ll-prose-bold,
-[data-theme='light'] .ll-prose-bold {
+  border-bottom-color: #E2E8F0;
   color: #0F172A;
 }
 
 body.light-theme .ll-blockquote,
 [data-theme='light'] .ll-blockquote {
-  background: #F0F4FF;
-  color: #3730A3;
+  background: #EEF2FF;
+  color: #312E81;
 }
 
 body.light-theme .ll-code-block,
 [data-theme='light'] .ll-code-block {
   background: #1E293B;
   color: #F8FAFC;
+}
+
+body.light-theme .ll-code-inline,
+[data-theme='light'] .ll-code-inline {
+  background: #EEF2FF;
+  color: #4338CA;
+}
+
+body.light-theme .ll-check-container,
+[data-theme='light'] .ll-check-container {
+  background: #FFFFFF;
+  border-color: #C7D2FE;
+  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.08);
+}
+
+body.light-theme .ll-check-prompt,
+[data-theme='light'] .ll-check-prompt {
+  color: #0F172A;
+}
+
+body.light-theme .ll-check-textarea,
+[data-theme='light'] .ll-check-textarea {
+  background: #FFFFFF;
+  color: #0F172A;
+  border-color: #CBD5E1;
+}
+
+body.light-theme .ll-check-textarea:focus,
+[data-theme='light'] .ll-check-textarea:focus {
+  border-color: #6366F1;
+}
+
+body.light-theme .ll-callout,
+[data-theme='light'] .ll-callout {
+  background: #EEF2FF;
+  border-left-color: #6366F1;
+}
+
+body.light-theme .ll-callout-title,
+[data-theme='light'] .ll-callout-title {
+  color: #4338CA;
+}
+
+body.light-theme .ll-lang-bar,
+[data-theme='light'] .ll-lang-bar {
+  background: #FFFFFF;
+  border-color: #CBD5E1;
+}
+
+body.light-theme .ll-lang-btn,
+[data-theme='light'] .ll-lang-btn {
+  color: #334155;
+  border-color: #CBD5E1;
+}
+
+body.light-theme .ll-lang-btn:hover,
+[data-theme='light'] .ll-lang-btn:hover {
+  background: #EEF2FF;
+  color: #4338CA;
+}
+
+body.light-theme .ll-breadcrumbs,
+[data-theme='light'] .ll-breadcrumbs {
+  color: #475569;
 }
 
 /* ─── CONTEXTUAL GATE CE & ES HIGHLIGHTS ─────────────────────────────────────── */

@@ -78,12 +78,12 @@ export default function ModuleAssessmentView({
       }}>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 10 }}>
           <span className="ll-tag ll-tag-primary">Unit {module.unitNumber} Assessment</span>
-          <span style={{ fontSize: 12, color: '#94A3B8' }}>Passing Threshold: 70%</span>
+          <span style={{ fontSize: 12, color: dark ? '#94A3B8' : '#475569' }}>Passing Threshold: 70%</span>
         </div>
         <h1 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 26, fontWeight: 800, margin: '0 0 8px 0', color: dark ? '#FFFFFF' : '#0F172A' }}>
           {assessment.title}
         </h1>
-        <p style={{ fontSize: 14, color: '#94A3B8', margin: 0 }}>
+        <p style={{ fontSize: 14, color: dark ? '#94A3B8' : '#334155', margin: 0 }}>
           Assesses course outcomes and syllabus mastery for {module.title}. Minimum score of 70% required for course certification.
         </p>
       </div>
@@ -102,10 +102,10 @@ export default function ModuleAssessmentView({
           <h2 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 24, fontWeight: 800, color: result.passed ? '#10B981' : '#EF4444', margin: '0 0 6px 0' }}>
             {result.passed ? 'Assessment Passed with Proficiency!' : 'Score Below 70% Passing Threshold'}
           </h2>
-          <div style={{ fontSize: 18, fontWeight: 700, margin: '10px 0' }}>
+          <div style={{ fontSize: 18, fontWeight: 700, margin: '10px 0', color: dark ? '#F1F5F9' : '#0F172A' }}>
             Score: {result.score} / {result.total} ({result.percentage}%)
           </div>
-          <p style={{ fontSize: 13, color: '#94A3B8', maxWidth: 540, margin: '0 auto 18px auto' }}>
+          <p style={{ fontSize: 13, color: dark ? '#94A3B8' : '#334155', maxWidth: 540, margin: '0 auto 18px auto' }}>
             {result.passed
               ? 'Congratulations! This module requirement is fulfilled and recorded towards your official Certificate of Completion.'
               : 'Review the technical explanations below and the lesson notes before retaking the assessment.'}
@@ -202,7 +202,7 @@ export default function ModuleAssessmentView({
                         transition: 'all 0.15s'
                       }}
                     >
-                      <span style={{ fontWeight: 700, width: 22, color: isOptSelected ? '#6366F1' : '#94A3B8' }}>
+                      <span style={{ fontWeight: 700, width: 22, color: isOptSelected ? '#6366F1' : (dark ? '#94A3B8' : '#64748B') }}>
                         {['A','B','C','D'][optIdx]}.
                       </span>
                       <span style={{ color: dark ? '#E2E8F0' : '#1E293B' }}><FormattedContent inline content={opt} /></span>
@@ -216,9 +216,9 @@ export default function ModuleAssessmentView({
                   marginTop: 12,
                   padding: '10px 14px',
                   borderRadius: 8,
-                  background: 'rgba(99, 102, 241, 0.08)',
+                  background: dark ? 'rgba(99, 102, 241, 0.08)' : '#EEF2FF',
                   fontSize: 12,
-                  color: '#A5B4FC',
+                  color: dark ? '#A5B4FC' : '#312E81',
                   lineHeight: 1.5
                 }}>
                   <strong>Explanation:</strong> <FormattedContent inline content={q.explanation} />

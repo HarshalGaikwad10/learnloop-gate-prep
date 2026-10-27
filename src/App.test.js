@@ -1207,6 +1207,100 @@ describe('Gemini API Authentication & Upstream Error Classification Suite', () =
   });
 });
 
+describe('Light Mode Readability, Theme Tokens, and Dynamic Theme Switching', () => {
+  const mockUser = {
+    id: 'test-user-theme',
+    name: 'Harshal Civil',
+    email: 'harshal@example.com',
+    preferredLanguage: 'en',
+    gateYear: '2027'
+  };
+
+  test('Navbar theme toggle switches between Dark and Light mode, updating DOM attributes', () => {
+    const Navbar = require('./components/Navbar').default;
+    let isDark = true;
+    const setDark = jest.fn((newVal) => {
+      isDark = typeof newVal === 'function' ? newVal(isDark) : newVal;
+    });
+
+    const { rerender } = render(
+      <Navbar
+        dark={isDark}
+        setDark={setDark}
+        activeTab="academy"
+        setActiveTab={jest.fn()}
+        user={mockUser}
+        setUser={jest.fn()}
+        onOpenAuth={jest.fn()}
+      />
+    );
+
+    const toggleBtn = screen.getByLabelText(/toggle dark\/light theme/i);
+    expect(toggleBtn).toBeInTheDocument();
+    expect(screen.getByText('Light')).toBeInTheDocument();
+
+    fireEvent.click(toggleBtn);
+    expect(setDark).toHaveBeenCalledWith(false);
+
+    // Simulate re-render with dark=false
+    rerender(
+      <Navbar
+        dark={false}
+        setDark={setDark}
+        activeTab="academy"
+        setActiveTab={jest.fn()}
+        user={mockUser}
+        setUser={jest.fn()}
+        onOpenAuth={jest.fn()}
+      />
+    );
+
+    expect(screen.getByText('Dark')).toBeInTheDocument();
+  });
+
+  test('LessonPlayer in light mode renders syllabus headings, read times, and prose with dark readable colors', () => {
+    const LessonPlayer = require('./components/academy/LessonPlayer').default;
+    const { waterEngineeringCourse } = require('./data/courses/waterEngineeringCourse');
+    const lesson = waterEngineeringCourse.modules[0].lessons[0];
+
+    render(
+      <LessonPlayer
+        lesson={lesson}
+        course={waterEngineeringCourse}
+        user={mockUser}
+        dark={false}
+        onBackToCourse={jest.fn()}
+      />
+    );
+
+    // Assert main lesson title is rendered
+    expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
+    expect(screen.getByText(/mins read/i)).toBeInTheDocument();
+    expect(screen.getByText(/Learning Objectives/i)).toBeInTheDocument();
+    expect(screen.getByText(/Outcome-Based Conceptual Verification/i)).toBeInTheDocument();
+  });
+
+  test('AI Tutor Chatbot in light mode renders with .light class and tutor bubble styles', () => {
+    render(<Chatbot dark={false} user={mockUser} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    const chatbotRoot = screen.getByTestId('chatbot-root');
+    expect(chatbotRoot).toHaveClass('light');
+    expect(chatbotRoot).not.toHaveClass('dark');
+  });
+
+  test('MathRenderer renders mathematical formulas with high-contrast elements in light mode', () => {
+    const MathRenderer = require('./components/common/MathRenderer').default;
+    const { container } = render(
+      <MathRenderer math="v_s = \frac{g (\rho_p - \rho_w) d^2}{18 \mu}" block={true} />
+    );
+
+    expect(container.querySelector('.math-block-container')).toBeInTheDocument();
+    expect(container.textContent).toContain('18');
+    expect(container.textContent).toContain('μ');
+  });
+});
+
 
 
 

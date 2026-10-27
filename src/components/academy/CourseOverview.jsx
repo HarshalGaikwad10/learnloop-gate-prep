@@ -159,7 +159,7 @@ export default function CourseOverview({
         <p
           style={{
             fontSize: 15,
-            color: '#94A3B8',
+            color: dark ? '#CBD5E1' : '#334155',
             maxWidth: 820,
             lineHeight: 1.7,
             margin: '0 0 24px 0',
@@ -172,7 +172,8 @@ export default function CourseOverview({
         {!isDemo && (
           <div
             style={{
-              background: dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+              background: dark ? 'rgba(255,255,255,0.05)' : '#FFFFFF',
+              border: dark ? 'none' : '1px solid #CBD5E1',
               borderRadius: 14,
               padding: '16px 20px',
               marginBottom: 24,
@@ -185,6 +186,7 @@ export default function CourseOverview({
                 justifyContent: 'space-between',
                 fontSize: 13,
                 fontWeight: 700,
+                color: dark ? '#F1F5F9' : '#0F172A',
                 marginBottom: 8,
               }}
             >
@@ -197,7 +199,7 @@ export default function CourseOverview({
                 style={{ width: `${eligibility.overallProgressPct}%` }}
               />
             </div>
-            <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 6 }}>
+            <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', marginTop: 6 }}>
               {eligibility.completedLessonsCount} of {eligibility.totalLessons} lessons completed · {eligibility.modulesPassed} of 6 module assessments passed
             </div>
           </div>
@@ -504,10 +506,10 @@ export default function CourseOverview({
 
           {isDemo && Array.isArray(course?.learningOutcomes) ? (
             <div>
-              <p style={{ fontSize: 13, color: '#94A3B8', lineHeight: 1.6, margin: '0 0 12px 0' }}>
+              <p style={{ fontSize: 13, color: dark ? '#CBD5E1' : '#334155', lineHeight: 1.6, margin: '0 0 12px 0' }}>
                 Key pedagogical competencies mapped for Indian university undergraduate curricula:
               </p>
-              <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12.5, color: '#94A3B8', lineHeight: 1.8 }}>
+              <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12.5, color: dark ? '#CBD5E1' : '#334155', lineHeight: 1.8 }}>
                 {course.learningOutcomes.map((outcome, idx) => (
                   <li key={idx}>
                     <FormattedContent inline content={outcome} />
@@ -517,10 +519,10 @@ export default function CourseOverview({
             </div>
           ) : (
             <div>
-              <p style={{ fontSize: 13, color: '#94A3B8', lineHeight: 1.6, margin: '0 0 14px 0' }}>
+              <p style={{ fontSize: 13, color: dark ? '#CBD5E1' : '#334155', lineHeight: 1.6, margin: '0 0 14px 0' }}>
                 Structured for undergraduate Civil Engineering students across Indian colleges and universities. 6 comprehensive modules with 42 hours of structured municipal water supply and sanitation principles:
               </p>
-              <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: '#94A3B8', lineHeight: 1.8 }}>
+              <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: dark ? '#CBD5E1' : '#334155', lineHeight: 1.8 }}>
                 <li>Basics of Water Supply & Population Forecasting (IS 1172 & CPHEEO)</li>
                 <li>Physical & Chemical Water Treatment Units</li>
                 <li>Water Distribution & Pipe Network Analysis</li>
@@ -555,7 +557,7 @@ export default function CourseOverview({
               {isDemo ? 'Unified GATE CE Syllabus Integration' : 'Unified GATE CE & GATE ES Integration'}
             </h3>
           </div>
-          <p style={{ fontSize: 13, color: '#94A3B8', lineHeight: 1.6, margin: '0 0 14px 0' }}>
+          <p style={{ fontSize: 13, color: dark ? '#CBD5E1' : '#334155', lineHeight: 1.6, margin: '0 0 14px 0' }}>
             {isDemo
               ? 'Curriculum aligned with standard Indian higher education requirements and contextual GATE examination sections:'
               : 'Contextual annotations integrated seamlessly into lessons without separate tracks:'}
@@ -666,7 +668,7 @@ export default function CourseOverview({
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                     <span className="ll-tag ll-tag-primary">Unit {mod.unitNumber}</span>
-                    <span style={{ fontSize: 12, color: '#94A3B8' }}>{mod.plannedHours} Core Hours</span>
+                    <span style={{ fontSize: 12, color: dark ? '#94A3B8' : '#475569' }}>{mod.plannedHours} Core Hours</span>
                     {isFeaturedMod && <span className="ll-tag ll-tag-success">⭐ Deep Demonstration</span>}
                     {isDemo && (
                       <span
@@ -694,7 +696,7 @@ export default function CourseOverview({
                   >
                     <FormattedContent inline content={mod.title} />
                   </h3>
-                  <p style={{ fontSize: 13, color: '#94A3B8', margin: 0 }}>
+                  <p style={{ fontSize: 13, color: dark ? '#94A3B8' : '#334155', margin: 0 }}>
                     <FormattedContent inline content={mod.summary} />
                   </p>
                 </div>
@@ -703,9 +705,9 @@ export default function CourseOverview({
                   <button
                     onClick={() => handleStartAssessment && handleStartAssessment(mod)}
                     style={{
-                      background: 'rgba(99, 102, 241, 0.1)',
-                      color: '#818CF8',
-                      border: '1px solid rgba(99, 102, 241, 0.3)',
+                      background: dark ? 'rgba(99, 102, 241, 0.1)' : '#EEF2FF',
+                      color: dark ? '#818CF8' : '#4338CA',
+                      border: dark ? '1px solid rgba(99, 102, 241, 0.3)' : '1px solid #C7D2FE',
                       borderRadius: 10,
                       padding: '8px 16px',
                       fontSize: 12,
@@ -722,7 +724,7 @@ export default function CourseOverview({
               {/* Sample Topics Pills for Demo Courses */}
               {isDemo && Array.isArray(mod.sampleTopics) && (
                 <div style={{ marginTop: 12 }}>
-                  <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 600, marginBottom: 6 }}>
+                  <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', fontWeight: 600, marginBottom: 6 }}>
                     Core Unit Topics & GATE Focus:
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -799,7 +801,7 @@ export default function CourseOverview({
                             >
                               <FormattedContent inline content={les.title} />
                             </div>
-                            <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 2 }}>
+                            <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', marginTop: 2 }}>
                               {les.syllabusSource} · ⏱ ~{les.readTimeMinutes} mins read
                             </div>
                           </div>
@@ -823,9 +825,10 @@ export default function CourseOverview({
         <div
           style={{
             marginTop: 36,
-            background:
-              'radial-gradient(circle at 50% 50%, rgba(99,102,241,0.12) 0%, rgba(17,24,39,0.9) 100%)',
-            border: '2px solid rgba(99,102,241,0.4)',
+            background: dark
+              ? 'radial-gradient(circle at 50% 50%, rgba(99,102,241,0.12) 0%, rgba(17,24,39,0.9) 100%)'
+              : 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)',
+            border: dark ? '2px solid rgba(99,102,241,0.4)' : '2px solid #C7D2FE',
             borderRadius: 20,
             padding: '32px',
             textAlign: 'center',
@@ -840,7 +843,7 @@ export default function CourseOverview({
               fontSize: 24,
               fontWeight: 800,
               margin: '8px 0',
-              color: '#FFFFFF',
+              color: dark ? '#FFFFFF' : '#0F172A',
             }}
           >
             Comprehensive Final Examination
@@ -848,7 +851,7 @@ export default function CourseOverview({
           <p
             style={{
               fontSize: 14,
-              color: '#94A3B8',
+              color: dark ? '#94A3B8' : '#334155',
               maxWidth: 640,
               margin: '0 auto 20px auto',
               lineHeight: 1.6,
@@ -913,7 +916,7 @@ export default function CourseOverview({
           <p
             style={{
               fontSize: 14,
-              color: '#94A3B8',
+              color: dark ? '#94A3B8' : '#334155',
               maxWidth: 620,
               margin: '0 auto 20px auto',
               lineHeight: 1.6,

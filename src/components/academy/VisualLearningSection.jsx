@@ -68,7 +68,8 @@ export default function VisualLearningSection({ lessonId, lessonTitle, dark = tr
   const cardBorder = dark ? '1px solid #1E293B' : '1px solid #E2E8F0';
   const contentBg = dark ? '#111827' : '#FFFFFF';
   const textColor = dark ? '#F1F5F9' : '#0F172A';
-  const subTextColor = dark ? '#94A3B8' : '#64748B';
+  const subTextColor = dark ? '#94A3B8' : '#475569';
+  const accentColor = dark ? '#818CF8' : '#4338CA';
 
   // Construct safe external search URLs with encoded query parameters
   const encodedGoogleQuery = encodeURIComponent(exploreFurther?.googleSearchQuery || `${topic} CPHEEO water treatment`);
@@ -138,7 +139,7 @@ export default function VisualLearningSection({ lessonId, lessonTitle, dark = tr
                   fontWeight: 700,
                   textTransform: 'uppercase',
                   letterSpacing: 0.8,
-                  color: '#818CF8',
+                  color: accentColor,
                   background: dark ? 'rgba(99, 102, 241, 0.15)' : 'rgba(99, 102, 241, 0.08)',
                   padding: '3px 8px',
                   borderRadius: 6,
@@ -173,7 +174,7 @@ export default function VisualLearningSection({ lessonId, lessonTitle, dark = tr
             padding: '6px 12px',
             fontSize: 12,
             fontWeight: 700,
-            color: '#818CF8',
+            color: accentColor,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -590,7 +591,7 @@ export default function VisualLearningSection({ lessonId, lessonTitle, dark = tr
                     lineHeight: 1.6,
                   }}
                 >
-                  <strong style={{ color: '#818CF8' }}>Engineering Interpretation: </strong>
+                  <strong style={{ color: accentColor }}>Engineering Interpretation: </strong>
                   {engineeringChart.explanation}
                 </div>
 
@@ -605,7 +606,7 @@ export default function VisualLearningSection({ lessonId, lessonTitle, dark = tr
                     lineHeight: 1.6,
                   }}
                 >
-                  <strong style={{ color: '#818CF8' }}>🎯 Key GATE CE Takeaway: </strong>
+                  <strong style={{ color: accentColor }}>🎯 Key GATE CE Takeaway: </strong>
                   <FormattedContent inline content={engineeringChart.gateTakeaway} />
                 </div>
               </div>
@@ -660,7 +661,7 @@ export default function VisualLearningSection({ lessonId, lessonTitle, dark = tr
                   marginBottom: 18,
                 }}
               >
-                <strong style={{ color: '#818CF8' }}>Problem Statement: </strong>
+                <strong style={{ color: accentColor }}>Problem Statement: </strong>
                 {workedExample.problemStatement}
               </div>
 
@@ -870,7 +871,7 @@ export default function VisualLearningSection({ lessonId, lessonTitle, dark = tr
                         style={{
                           fontSize: 12,
                           background: dark ? 'rgba(99, 102, 241, 0.1)' : '#EEF2FF',
-                          color: '#818CF8',
+                          color: accentColor,
                           border: '1px solid rgba(99, 102, 241, 0.25)',
                           borderRadius: 6,
                           padding: '4px 10px',
@@ -900,7 +901,7 @@ export default function VisualLearningSection({ lessonId, lessonTitle, dark = tr
                   style={{
                     fontSize: 11,
                     fontWeight: 700,
-                    color: '#818CF8',
+                    color: accentColor,
                     textTransform: 'uppercase',
                     letterSpacing: 0.8,
                   }}
@@ -983,7 +984,7 @@ export default function VisualLearningSection({ lessonId, lessonTitle, dark = tr
                       animation: 'spin 1s linear infinite',
                     }}
                   />
-                  <div style={{ fontSize: 14, fontWeight: 700, color: '#818CF8' }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: accentColor }}>
                     Consulting AI Model for {topic}...
                   </div>
                   <div style={{ fontSize: 12, color: subTextColor, marginTop: 4 }}>
@@ -1054,7 +1055,7 @@ export default function VisualLearningSection({ lessonId, lessonTitle, dark = tr
                         marginBottom: 16,
                       }}
                     >
-                      <div style={{ fontSize: 13, fontWeight: 700, color: '#818CF8', marginBottom: 4 }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: accentColor, marginBottom: 4 }}>
                         ℹ️ {aiResult.message || 'AI concept visualization active with high-fidelity SVG fallback.'}
                       </div>
                       <div style={{ fontSize: 12, color: subTextColor }}>

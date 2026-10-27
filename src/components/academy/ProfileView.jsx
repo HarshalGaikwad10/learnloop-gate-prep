@@ -148,8 +148,8 @@ export default function ProfileView({ user, setUser, dark, onLogout }) {
               style={{
                 width: "100%",
                 boxSizing: "border-box",
-                background: isDark ? "#182030" : "#E2E8F0",
-                color: isDark ? "#64748B" : "#94A3B8",
+                background: isDark ? "#182030" : "#F1F5F9",
+                color: isDark ? "#94A3B8" : "#475569",
                 border: `1px solid ${isDark ? "#253352" : "#CBD5E1"}`,
                 borderRadius: 10,
                 padding: "12px 16px",
@@ -166,7 +166,7 @@ export default function ProfileView({ user, setUser, dark, onLogout }) {
             style={{
               fontSize: 12,
               fontWeight: 700,
-              color: isDark ? "#94A3B8" : "#64748B",
+              color: isDark ? "#94A3B8" : "#475569",
               display: "block",
               marginBottom: 6,
               letterSpacing: 0.5,
@@ -274,7 +274,7 @@ export default function ProfileView({ user, setUser, dark, onLogout }) {
                   >
                     {lang.label}
                   </div>
-                  <div style={{ fontSize: 11, color: isDark ? "#64748B" : "#94A3B8", marginTop: 4 }}>
+                  <div style={{ fontSize: 11, color: isDark ? "#94A3B8" : "#475569", marginTop: 4 }}>
                     {lang.desc}
                   </div>
                 </div>
@@ -287,7 +287,7 @@ export default function ProfileView({ user, setUser, dark, onLogout }) {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: isDark ? "#94A3B8" : "#64748B",
+                color: isDark ? "#94A3B8" : "#475569",
                 display: "block",
                 marginBottom: 8,
                 letterSpacing: 0.5,
@@ -349,7 +349,7 @@ export default function ProfileView({ user, setUser, dark, onLogout }) {
                   >
                     {style.label}
                   </div>
-                  <div style={{ fontSize: 11, color: isDark ? "#64748B" : "#94A3B8", marginTop: 4 }}>
+                  <div style={{ fontSize: 11, color: isDark ? "#94A3B8" : "#475569", marginTop: 4 }}>
                     {style.desc}
                   </div>
                 </div>
@@ -416,7 +416,7 @@ export default function ProfileView({ user, setUser, dark, onLogout }) {
         </h3>
 
         {Object.keys(progress.assessmentResults || {}).length === 0 && !progress.finalExamResult ? (
-          <p style={{ color: isDark ? "#64748B" : "#94A3B8", fontSize: 13, margin: 0 }}>
+          <p style={{ color: isDark ? "#94A3B8" : "#475569", fontSize: 13, margin: 0 }}>
             No formal assessments completed yet. Take the Unit 1–6 assessments or final exam to record scores here.
           </p>
         ) : (
@@ -438,7 +438,7 @@ export default function ProfileView({ user, setUser, dark, onLogout }) {
                   <div style={{ fontWeight: 700, fontSize: 14, color: isDark ? "#F1F5F9" : "#0F172A" }}>
                     Module Assessment: {modId.replace("-", " ").toUpperCase()}
                   </div>
-                  <div style={{ fontSize: 11, color: isDark ? "#64748B" : "#94A3B8" }}>
+                  <div style={{ fontSize: 11, color: isDark ? "#94A3B8" : "#475569" }}>
                     Completed on {new Date(res.completedAt).toLocaleDateString()}
                   </div>
                 </div>
@@ -452,7 +452,7 @@ export default function ProfileView({ user, setUser, dark, onLogout }) {
                   >
                     {res.percentage}% {res.passed ? "(Passed)" : "(Needs Retake)"}
                   </div>
-                  <div style={{ fontSize: 11, color: isDark ? "#64748B" : "#94A3B8" }}>
+                  <div style={{ fontSize: 11, color: isDark ? "#94A3B8" : "#475569" }}>
                     {res.score} / {res.total} Correct
                   </div>
                 </div>
@@ -476,7 +476,7 @@ export default function ProfileView({ user, setUser, dark, onLogout }) {
                   <div style={{ fontWeight: 800, fontSize: 15, color: "#6366F1" }}>
                     🏆 Comprehensive Final Examination
                   </div>
-                  <div style={{ fontSize: 11, color: isDark ? "#94A3B8" : "#64748B" }}>
+                  <div style={{ fontSize: 11, color: isDark ? "#94A3B8" : "#475569" }}>
                     Completed on {new Date(progress.finalExamResult.completedAt).toLocaleDateString()}
                   </div>
                 </div>
@@ -490,7 +490,7 @@ export default function ProfileView({ user, setUser, dark, onLogout }) {
                   >
                     {progress.finalExamResult.percentage}% {progress.finalExamResult.passed ? "(Passed)" : "(Failed)"}
                   </div>
-                  <div style={{ fontSize: 11, color: isDark ? "#94A3B8" : "#64748B" }}>
+                  <div style={{ fontSize: 11, color: isDark ? "#94A3B8" : "#475569" }}>
                     {progress.finalExamResult.score} / {progress.finalExamResult.total} Correct
                   </div>
                 </div>

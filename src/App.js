@@ -48,8 +48,8 @@ const GATE_YEARS = [2025, 2026, 2027, 2028, 2029, 2030];
 
 // ─── THEME ───────────────────────────────────────────────────────────────────
 const T = {
-  dark:  { bg:"#07090F", surface:"#0D1117", card:"#111827", elevated:"#182030", border:"#1E293B", borderMid:"#253352", text:"#F1F5F9", textMid:"#94A3B8", textDim:"#475569", textFaint:"#2D3F5A", navBg:"rgba(7,9,15,0.92)", inputBg:"#0D1117" },
-  light: { bg:"#F0F4FF", surface:"#FAFBFF", card:"#FFFFFF", elevated:"#EEF2FF", border:"#E2E8F0", borderMid:"#C7D2FE", text:"#0F172A", textMid:"#475569", textDim:"#94A3B8", textFaint:"#CBD5E1", navBg:"rgba(240,244,255,0.95)", inputBg:"#FFFFFF" },
+  dark:  { bg:"#07090F", surface:"#0D1117", card:"#111827", elevated:"#182030", border:"#1E293B", borderMid:"#253352", text:"#F1F5F9", textMid:"#94A3B8", textDim:"#64748B", textFaint:"#334155", navBg:"rgba(7,9,15,0.92)", inputBg:"#0D1117" },
+  light: { bg:"#F0F4FF", surface:"#FAFBFF", card:"#FFFFFF", elevated:"#EEF2FF", border:"#CBD5E1", borderMid:"#C7D2FE", text:"#0F172A", textMid:"#334155", textDim:"#475569", textFaint:"#64748B", navBg:"rgba(240,244,255,0.95)", inputBg:"#FFFFFF" },
 };
 const C = { primary:"#6366F1", purple:"#8B5CF6", accent:"#06B6D4", success:"#10B981", warn:"#F59E0B", danger:"#EF4444" };
 
@@ -587,6 +587,12 @@ export default function App({ initialScreen = "auth" }) {
   const th = T[dark?"dark":"light"];
 
   useEffect(() => {
+    const theme = dark ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", theme);
+    document.body.className = `${theme}-theme`;
+  }, [dark]);
+
+  useEffect(() => {
     loadFonts();
     const existing = getCurrentUser();
     if (existing) {
@@ -1107,7 +1113,7 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
     }
 
     return (
-      <div style={appStyle}>
+      <div style={appStyle} className={`ll-app-root ${dark ? "dark" : "light"}`} data-theme={dark ? "dark" : "light"}>
         <Navbar
           dark={dark}
           setDark={setDark}

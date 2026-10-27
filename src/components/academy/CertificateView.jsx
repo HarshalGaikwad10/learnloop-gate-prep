@@ -49,12 +49,12 @@ export default function CertificateView({
       }}>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 10 }}>
           <span className="ll-tag ll-tag-success">Official Credentials</span>
-          <span style={{ fontSize: 12, color: '#94A3B8' }}>Cryptographically Verified Registry</span>
+          <span style={{ fontSize: 12, color: dark ? '#94A3B8' : '#475569' }}>Cryptographically Verified Registry</span>
         </div>
         <h1 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 28, fontWeight: 800, margin: '0 0 8px 0', color: dark ? '#FFFFFF' : '#0F172A' }}>
           Course Completion Certificates
         </h1>
-        <p style={{ fontSize: 14, color: '#94A3B8', margin: 0, maxWidth: 740, lineHeight: 1.6 }}>
+        <p style={{ fontSize: 14, color: dark ? '#94A3B8' : '#334155', margin: 0, maxWidth: 740, lineHeight: 1.6 }}>
           LearnLoop AI Academy credentials certify verified outcome-based mastery of civil engineering curricula aligned with university guidelines and GATE standards.
         </p>
       </div>
@@ -72,7 +72,7 @@ export default function CertificateView({
             <h3 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 18, fontWeight: 700, margin: '0 0 4px 0', color: dark ? '#FFFFFF' : '#0F172A' }}>
               Certificate Qualification Status: {course.title}
             </h3>
-            <span style={{ fontSize: 12, color: '#94A3B8' }}>42 Planned Core Hours · Core Civil Engineering Curriculum</span>
+            <span style={{ fontSize: 12, color: dark ? '#94A3B8' : '#475569' }}>42 Planned Core Hours · Core Civil Engineering Curriculum</span>
           </div>
 
           <span className={`ll-tag ${eligibility.eligible ? 'll-tag-success' : 'll-tag-warn'}`}>
@@ -90,9 +90,9 @@ export default function CertificateView({
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 700 }}>
               <span>{eligibility.completedLessonsCount >= eligibility.totalLessons ? '✅' : '⏳'}</span>
-              <span>All Lessons Completed</span>
+              <span style={{ color: dark ? '#F1F5F9' : '#0F172A' }}>All Lessons Completed</span>
             </div>
-            <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 4 }}>
+            <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', marginTop: 4 }}>
               {eligibility.completedLessonsCount} of {eligibility.totalLessons} lessons completed
             </div>
           </div>
@@ -105,9 +105,9 @@ export default function CertificateView({
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 700 }}>
               <span>{eligibility.modulesPassed === eligibility.totalModules ? '✅' : '⏳'}</span>
-              <span>6 Module Assessments (≥70%)</span>
+              <span style={{ color: dark ? '#F1F5F9' : '#0F172A' }}>6 Module Assessments (≥70%)</span>
             </div>
-            <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 4 }}>
+            <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', marginTop: 4 }}>
               {eligibility.modulesPassed} of 6 unit assessments passed
             </div>
           </div>
@@ -120,9 +120,9 @@ export default function CertificateView({
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 700 }}>
               <span>{eligibility.finalExam?.passed ? '✅' : '⏳'}</span>
-              <span>Final Examination (≥70%)</span>
+              <span style={{ color: dark ? '#F1F5F9' : '#0F172A' }}>Final Examination (≥70%)</span>
             </div>
-            <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 4 }}>
+            <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', marginTop: 4 }}>
               {eligibility.finalExam ? `${eligibility.finalExam.percentage}% scored` : 'Not attempted yet'}
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function CertificateView({
                   <h3 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 24, fontWeight: 800, color: dark ? '#FFFFFF' : '#0F172A', margin: '4px 0' }}>
                     {cert.courseTitle}
                   </h3>
-                  <div style={{ fontSize: 13, color: '#94A3B8' }}>
+                  <div style={{ fontSize: 13, color: dark ? '#94A3B8' : '#334155' }}>
                     Recipient: <strong style={{ color: '#38BDF8' }}>{cert.studentName}</strong> · Issued on {cert.issueDateFormatted}
                   </div>
                 </div>
@@ -177,7 +177,7 @@ export default function CertificateView({
                 flexWrap: 'wrap',
                 gap: 12
               }}>
-                <div style={{ fontSize: 11, color: '#64748B' }}>
+                <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569' }}>
                   Aligned with Core Civil Engineering curriculum & GATE CE / ES integrated competencies · 42 core hours
                 </div>
 
@@ -208,7 +208,7 @@ export default function CertificateView({
                     }}
                     style={{
                       background: 'transparent',
-                      color: '#94A3B8',
+                      color: dark ? '#94A3B8' : '#334155',
                       border: '1px solid var(--ll-border, #1E293B)',
                       borderRadius: 10,
                       padding: '10px 16px',
@@ -237,7 +237,7 @@ export default function CertificateView({
           <h3 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 20, fontWeight: 700, margin: '0 0 8px 0', color: dark ? '#FFFFFF' : '#0F172A' }}>
             Certificate Currently Locked
           </h3>
-          <p style={{ fontSize: 14, color: '#94A3B8', maxWidth: 500, margin: '0 auto 20px auto', lineHeight: 1.6 }}>
+          <p style={{ fontSize: 14, color: dark ? '#94A3B8' : '#334155', maxWidth: 500, margin: '0 auto 20px auto', lineHeight: 1.6 }}>
             Complete the required lessons, pass the 6 module assessments, and achieve ≥70% in the final examination to unlock your verifiable credential.
           </p>
           <button
@@ -272,7 +272,7 @@ export default function CertificateView({
             Public Credential Verification
           </h2>
         </div>
-        <p style={{ fontSize: 13, color: '#94A3B8', margin: '0 0 20px 0', lineHeight: 1.6 }}>
+        <p style={{ fontSize: 13, color: dark ? '#94A3B8' : '#475569', margin: '0 0 20px 0', lineHeight: 1.6 }}>
           Employers, universities, and students can verify the authenticity of any LearnLoop AI Certificate of Completion using its unique Certificate ID.
         </p>
 
@@ -285,7 +285,7 @@ export default function CertificateView({
             style={{
               flex: 1,
               background: dark ? '#0D1117' : '#F8FAFC',
-              color: dark ? '#fff' : '#000',
+              color: dark ? '#fff' : '#0F172A',
               border: '1px solid var(--ll-border, #1E293B)',
               borderRadius: 10,
               padding: '12px 16px',
@@ -326,7 +326,7 @@ export default function CertificateView({
             </div>
 
             {verifyResult.valid ? (
-              <div style={{ fontSize: 13, color: '#CBD5E1', lineHeight: 1.6 }}>
+              <div style={{ fontSize: 13, color: dark ? '#CBD5E1' : '#1E293B', lineHeight: 1.6 }}>
                 <div><strong>Recipient:</strong> {verifyResult.studentName}</div>
                 <div><strong>Course:</strong> {verifyResult.courseTitle}</div>
                 <div><strong>Curriculum:</strong> {verifyResult.curriculumBasis || 'Core Civil Engineering Curriculum · GATE CE & ES'}</div>

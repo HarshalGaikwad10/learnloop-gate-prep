@@ -188,7 +188,7 @@ export default function LessonPlayer({
       }}>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 12, flexWrap: 'wrap' }}>
           <span className="ll-tag ll-tag-primary">{lesson.syllabusSource}</span>
-          <span style={{ fontSize: 12, color: '#94A3B8' }}>⏱ ~{lesson.readTimeMinutes} mins read</span>
+          <span style={{ fontSize: 12, color: dark ? '#94A3B8' : '#475569' }}>⏱ ~{lesson.readTimeMinutes} mins read</span>
           {evalResult?.status === 'understood' && (
             <span className="ll-tag ll-tag-success">✓ Concept Mastered</span>
           )}
@@ -211,10 +211,10 @@ export default function LessonPlayer({
           borderRadius: '0 10px 10px 0',
           padding: '12px 18px'
         }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: '#818CF8', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: dark ? '#818CF8' : '#4338CA', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>
             Learning Objectives
           </div>
-          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: '#94A3B8', lineHeight: 1.6 }}>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: dark ? '#94A3B8' : '#334155', lineHeight: 1.6 }}>
             {(lesson?.objectives || []).map((obj, i) => <li key={i}>{obj}</li>)}
           </ul>
         </div>
@@ -228,7 +228,7 @@ export default function LessonPlayer({
             <div style={{ fontWeight: 700, fontSize: 13, color: dark ? '#F1F5F9' : '#0F172A' }}>
               Explain in My Language
             </div>
-            <div style={{ fontSize: 11, color: '#94A3B8' }}>
+            <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569' }}>
               Concept explanation with local engineering analogies & English technical terms
             </div>
           </div>
@@ -329,7 +329,7 @@ export default function LessonPlayer({
         {lesson.practicalExamples?.length > 0 && (
           <div className="ll-callout" style={{ marginTop: 28 }}>
             <div className="ll-callout-title">🏗️ Real-World Civil Engineering Field Examples</div>
-            <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: '#94A3B8' }}>
+            <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: dark ? '#94A3B8' : '#334155' }}>
               {lesson.practicalExamples.map((ex, i) => <li key={i}>{ex}</li>)}
             </ul>
           </div>
@@ -337,9 +337,9 @@ export default function LessonPlayer({
 
         {/* Common Misconceptions */}
         {lesson.commonMisconceptions?.length > 0 && (
-          <div className="ll-callout" style={{ borderLeftColor: '#F59E0B', background: 'rgba(245, 158, 11, 0.08)' }}>
-            <div className="ll-callout-title" style={{ color: '#F59E0B' }}>⚠️ Common Student Misconceptions & Exam Traps</div>
-            <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: '#94A3B8' }}>
+          <div className="ll-callout" style={{ borderLeftColor: '#F59E0B', background: dark ? 'rgba(245, 158, 11, 0.08)' : '#FFFBEB' }}>
+            <div className="ll-callout-title" style={{ color: dark ? '#F59E0B' : '#B45309' }}>⚠️ Common Student Misconceptions & Exam Traps</div>
+            <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: dark ? '#94A3B8' : '#334155' }}>
               {lesson.commonMisconceptions.map((m, i) => <li key={i}>{m}</li>)}
             </ul>
           </div>
@@ -357,14 +357,14 @@ export default function LessonPlayer({
       <div className="ll-check-container" data-testid="understanding-check-container">
         <div className="ll-check-header">
           <span className="ll-check-badge">SIGNATURE LEARNING CHECK</span>
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#818CF8' }}>Outcome-Based Conceptual Verification</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: dark ? '#818CF8' : '#4338CA' }}>Outcome-Based Conceptual Verification</span>
         </div>
 
         <div className="ll-check-prompt">
           <FormattedContent inline content={lesson?.understandingCheck?.prompt || ''} />
         </div>
 
-        <p style={{ fontSize: 12, color: '#94A3B8', margin: '0 0 12px 0' }}>
+        <p style={{ fontSize: 12, color: dark ? '#94A3B8' : '#475569', margin: '0 0 12px 0' }}>
           Explain in your own words. Focus on the physical mechanisms and engineering consequences. You do not need to memorize textbook definitions.
         </p>
 
@@ -413,10 +413,10 @@ export default function LessonPlayer({
             {/* Strengths */}
             {evalResult.strengths?.length > 0 && (
               <div style={{ marginBottom: 12 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#34D399', textTransform: 'uppercase', marginBottom: 4 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: dark ? '#34D399' : '#065F46', textTransform: 'uppercase', marginBottom: 4 }}>
                   ✓ What You Understood Correctly:
                 </div>
-                <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: '#D1FAE5' }}>
+                <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: dark ? '#D1FAE5' : '#065F46' }}>
                   {evalResult.strengths.map((s, i) => <li key={i}>{s}</li>)}
                 </ul>
               </div>
@@ -425,10 +425,10 @@ export default function LessonPlayer({
             {/* Missing Points */}
             {evalResult.missingPoints?.length > 0 && (
               <div style={{ marginBottom: 12 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#FBBF24', textTransform: 'uppercase', marginBottom: 4 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: dark ? '#FBBF24' : '#92400E', textTransform: 'uppercase', marginBottom: 4 }}>
                   ⚠️ Critical Points Missing from Your Explanation:
                 </div>
-                <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: '#FEF3C7' }}>
+                <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: dark ? '#FEF3C7' : '#92400E' }}>
                   {evalResult.missingPoints.map((m, i) => <li key={i}>{m}</li>)}
                 </ul>
               </div>
@@ -437,10 +437,10 @@ export default function LessonPlayer({
             {/* Misconceptions */}
             {evalResult.misconceptions?.length > 0 && (
               <div style={{ marginBottom: 12 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#F87171', textTransform: 'uppercase', marginBottom: 4 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: dark ? '#F87171' : '#991B1B', textTransform: 'uppercase', marginBottom: 4 }}>
                   ❌ Identified Misconceptions:
                 </div>
-                <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: '#FEE2E2' }}>
+                <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: dark ? '#FEE2E2' : '#991B1B' }}>
                   {evalResult.misconceptions.map((mc, i) => <li key={i}>{mc}</li>)}
                 </ul>
               </div>
@@ -448,18 +448,27 @@ export default function LessonPlayer({
 
             {/* Professor's Explanation & Analogy */}
             {evalResult.explanation && (
-              <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px 16px', borderRadius: 10, margin: '12px 0', fontSize: 13, lineHeight: 1.6 }}>
-                <strong>Professor's Clarification:</strong> <FormattedContent content={evalResult.explanation} />
+              <div style={{
+                background: dark ? 'rgba(0,0,0,0.2)' : '#FFFFFF',
+                border: dark ? 'none' : '1px solid #CBD5E1',
+                padding: '12px 16px',
+                borderRadius: 10,
+                margin: '12px 0',
+                fontSize: 13,
+                lineHeight: 1.6,
+                color: dark ? '#F1F5F9' : '#0F172A'
+              }}>
+                <strong style={{ color: dark ? '#818CF8' : '#4338CA' }}>Professor's Clarification:</strong> <FormattedContent content={evalResult.explanation} />
               </div>
             )}
 
             {/* Follow-up Question */}
             {evalResult.followUpQuestion && (
-              <div style={{ marginTop: 14, borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 12 }}>
-                <div style={{ fontWeight: 700, fontSize: 13, color: '#93C5FD', marginBottom: 6 }}>
+              <div style={{ marginTop: 14, borderTop: `1px solid ${dark ? 'rgba(255,255,255,0.1)' : '#CBD5E1'}`, paddingTop: 12 }}>
+                <div style={{ fontWeight: 700, fontSize: 13, color: dark ? '#93C5FD' : '#1E40AF', marginBottom: 6 }}>
                   🎯 Targeted Follow-Up Question:
                 </div>
-                <div style={{ fontSize: 13, color: '#E0E7FF', margin: '0 0 10px 0' }}>
+                <div style={{ fontSize: 13, color: dark ? '#E0E7FF' : '#1E293B', margin: '0 0 10px 0' }}>
                   <FormattedContent content={evalResult.followUpQuestion} />
                 </div>
 
@@ -472,11 +481,11 @@ export default function LessonPlayer({
                       onChange={(e) => setFollowUpAnswer(e.target.value)}
                       style={{
                         flex: 1,
-                        background: 'rgba(0,0,0,0.3)',
-                        border: '1px solid var(--ll-border, #1E293B)',
+                        background: dark ? 'rgba(0,0,0,0.3)' : '#FFFFFF',
+                        border: `1px solid ${dark ? 'var(--ll-border, #1E293B)' : '#CBD5E1'}`,
                         borderRadius: 8,
                         padding: '10px 14px',
-                        color: '#fff',
+                        color: dark ? '#fff' : '#0F172A',
                         fontSize: 13,
                         outline: 'none'
                       }}
@@ -585,14 +594,15 @@ export default function LessonPlayer({
 
                   {revealed && (
                     <div style={{
-                      background: 'rgba(99, 102, 241, 0.08)',
+                      background: dark ? 'rgba(99, 102, 241, 0.08)' : '#EEF2FF',
+                      border: dark ? 'none' : '1px solid #C7D2FE',
                       borderRadius: 8,
                       padding: '10px 14px',
                       fontSize: 12,
-                      color: '#A5B4FC',
+                      color: dark ? '#A5B4FC' : '#312E81',
                       lineHeight: 1.5
                     }}>
-                      <strong>Explanation:</strong> <FormattedContent inline content={pq.explanation} />
+                      <strong style={{ color: dark ? '#818CF8' : '#4338CA' }}>Explanation:</strong> <FormattedContent inline content={pq.explanation} />
                     </div>
                   )}
                 </div>
@@ -617,8 +627,8 @@ export default function LessonPlayer({
             onClick={() => handleNavigate(prevLesson)}
             style={{
               background: 'transparent',
-              color: '#94A3B8',
-              border: '1px solid var(--ll-border, #1E293B)',
+              color: dark ? '#94A3B8' : '#475569',
+              border: `1px solid ${dark ? 'var(--ll-border, #1E293B)' : '#CBD5E1'}`,
               borderRadius: 10,
               padding: '10px 20px',
               fontFamily: "'DM Sans', sans-serif",

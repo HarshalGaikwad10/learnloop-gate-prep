@@ -230,7 +230,7 @@ export default function DashboardView({
             <div
               style={{
                 fontSize: 11,
-                color: isDark ? "#64748B" : "#94A3B8",
+                color: isDark ? "#94A3B8" : "#475569",
                 marginTop: 4,
               }}
             >
@@ -392,7 +392,7 @@ export default function DashboardView({
                         <span
                           style={{
                             background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
-                            color: isDark ? "#64748B" : "#94A3B8",
+                            color: isDark ? "#94A3B8" : "#475569",
                             padding: "4px 10px",
                             borderRadius: 12,
                             fontSize: 11,
@@ -528,7 +528,7 @@ export default function DashboardView({
                     alignItems: "center",
                     gap: 8,
                     fontSize: 12,
-                    color: c.met ? "#10B981" : isDark ? "#64748B" : "#94A3B8",
+                    color: c.met ? "#10B981" : isDark ? "#94A3B8" : "#475569",
                   }}
                 >
                   <span>{c.met ? "✓" : "○"}</span>
@@ -560,7 +560,7 @@ export default function DashboardView({
                 style={{
                   width: "100%",
                   background: passedAssessmentsCount >= 6 ? "#6366F1" : isDark ? "#182030" : "#F1F5F9",
-                  color: passedAssessmentsCount >= 6 ? "#fff" : isDark ? "#64748B" : "#94A3B8",
+                  color: passedAssessmentsCount >= 6 ? "#fff" : isDark ? "#94A3B8" : "#64748B",
                   border: `1px solid ${isDark ? "#253352" : "#CBD5E1"}`,
                   borderRadius: 10,
                   padding: "12px",

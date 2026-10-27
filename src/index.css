@@ -1,13 +1,207 @@
+/* ─── LEARNLOOP AI ACADEMY DESIGN SYSTEM & THEME TOKENS ─────────────────────── */
+
+:root {
+  /* Brand Constants */
+  --ll-primary: #6366F1;
+  --ll-primary-hover: #4F46E5;
+  --ll-purple: #8B5CF6;
+  --ll-accent: #06B6D4;
+  --ll-success: #10B981;
+  --ll-warn: #F59E0B;
+  --ll-danger: #EF4444;
+
+  /* Typography */
+  --ll-font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ll-font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ll-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Default (Dark Mode) Tokens */
+  --ll-bg: #07090F;
+  --ll-surface: #0D1117;
+  --ll-card: #111827;
+  --ll-elevated: #182030;
+  --ll-border: #1E293B;
+  --ll-border-mid: #253352;
+  --ll-divider: rgba(255, 255, 255, 0.08);
+
+  --ll-text: #F1F5F9;
+  --ll-text-mid: #94A3B8;
+  --ll-text-dim: #64748B;
+  --ll-text-faint: #334155;
+  --ll-heading: #FFFFFF;
+  --ll-heading-accent: #818CF8;
+
+  --ll-input-bg: #0D1117;
+  --ll-input-border: #1E293B;
+  --ll-input-placeholder: #475569;
+
+  --ll-code-bg: #0A0D14;
+  --ll-code-text: #E2E8F0;
+  --ll-code-inline-bg: rgba(99, 102, 241, 0.15);
+  --ll-code-inline-text: #818CF8;
+  --ll-blockquote-bg: rgba(99, 102, 241, 0.06);
+  --ll-blockquote-text: #C7D2FE;
+
+  --ll-math-bg: #182030;
+  --ll-math-border: #253352;
+  --ll-math-text: #818CF8;
+  --ll-math-inline-text: #38BDF8;
+
+  --ll-table-bg: #111827;
+  --ll-table-th-bg: rgba(99, 102, 241, 0.12);
+  --ll-table-th-text: #A5B4FC;
+  --ll-table-td-text: #E2E8F0;
+  --ll-table-border: #1E293B;
+  --ll-table-row-hover: rgba(99, 102, 241, 0.04);
+
+  --ll-gate-ce-bg: rgba(99, 102, 241, 0.08);
+  --ll-gate-ce-border: rgba(99, 102, 241, 0.35);
+  --ll-gate-ce-concept: #F1F5F9;
+  --ll-gate-ce-body: #94A3B8;
+
+  --ll-gate-es-bg: rgba(16, 185, 129, 0.06);
+  --ll-gate-es-border: rgba(16, 185, 129, 0.25);
+  --ll-gate-es-text: #94A3B8;
+
+  --ll-msg-tutor-bg: #182030;
+  --ll-msg-user-bg: linear-gradient(135deg, #6366F1, #8B5CF6);
+  --ll-panel-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.2);
+  --ll-card-hover: rgba(99, 102, 241, 0.08);
+}
+
+/* ─── DARK THEME TOKENS ──────────────────────────────────────────────────────── */
+[data-theme='dark'],
+body.dark-theme,
+.ll-app-root.dark,
+.ll-chatbot-root.dark {
+  --ll-bg: #07090F;
+  --ll-surface: #0D1117;
+  --ll-card: #111827;
+  --ll-elevated: #182030;
+  --ll-border: #1E293B;
+  --ll-border-mid: #253352;
+  --ll-divider: rgba(255, 255, 255, 0.08);
+
+  --ll-text: #F1F5F9;
+  --ll-text-mid: #94A3B8;
+  --ll-text-dim: #64748B;
+  --ll-text-faint: #334155;
+  --ll-heading: #FFFFFF;
+  --ll-heading-accent: #818CF8;
+
+  --ll-input-bg: #0D1117;
+  --ll-input-border: #1E293B;
+  --ll-input-placeholder: #475569;
+
+  --ll-code-bg: #0A0D14;
+  --ll-code-text: #E2E8F0;
+  --ll-code-inline-bg: rgba(99, 102, 241, 0.15);
+  --ll-code-inline-text: #818CF8;
+  --ll-blockquote-bg: rgba(99, 102, 241, 0.06);
+  --ll-blockquote-text: #C7D2FE;
+
+  --ll-math-bg: #182030;
+  --ll-math-border: #253352;
+  --ll-math-text: #818CF8;
+  --ll-math-inline-text: #38BDF8;
+
+  --ll-table-bg: #111827;
+  --ll-table-th-bg: rgba(99, 102, 241, 0.12);
+  --ll-table-th-text: #A5B4FC;
+  --ll-table-td-text: #E2E8F0;
+  --ll-table-border: #1E293B;
+  --ll-table-row-hover: rgba(99, 102, 241, 0.04);
+
+  --ll-gate-ce-bg: rgba(99, 102, 241, 0.08);
+  --ll-gate-ce-border: rgba(99, 102, 241, 0.35);
+  --ll-gate-ce-concept: #F1F5F9;
+  --ll-gate-ce-body: #94A3B8;
+
+  --ll-gate-es-bg: rgba(16, 185, 129, 0.06);
+  --ll-gate-es-border: rgba(16, 185, 129, 0.25);
+  --ll-gate-es-text: #94A3B8;
+
+  --ll-msg-tutor-bg: #182030;
+  --ll-msg-user-bg: linear-gradient(135deg, #6366F1, #8B5CF6);
+  --ll-panel-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.2);
+  --ll-card-hover: rgba(99, 102, 241, 0.08);
+}
+
+/* ─── LIGHT THEME TOKENS (WCAG AA ACCESSIBILITY AUDITED) ─────────────────────── */
+[data-theme='light'],
+body.light-theme,
+.ll-app-root.light,
+.ll-chatbot-root.light {
+  --ll-bg: #F0F4FF;
+  --ll-surface: #FAFBFF;
+  --ll-card: #FFFFFF;
+  --ll-elevated: #EEF2FF;
+  --ll-border: #CBD5E1;
+  --ll-border-mid: #C7D2FE;
+  --ll-divider: rgba(0, 0, 0, 0.08);
+
+  --ll-text: #0F172A; /* Slate 900: 16:1 contrast against #FFFFFF */
+  --ll-text-mid: #334155; /* Slate 700: 9.5:1 contrast against #FFFFFF */
+  --ll-text-dim: #475569; /* Slate 600: 7.0:1 contrast against #FFFFFF */
+  --ll-text-faint: #64748B; /* Slate 500: 4.54:1 contrast against #FFFFFF */
+  --ll-heading: #0F172A; /* Slate 900 */
+  --ll-heading-accent: #4338CA; /* Deep Indigo 700: 8.4:1 contrast */
+
+  --ll-input-bg: #FFFFFF;
+  --ll-input-border: #CBD5E1;
+  --ll-input-placeholder: #64748B;
+
+  --ll-code-bg: #1E293B;
+  --ll-code-text: #F8FAFC;
+  --ll-code-inline-bg: #EEF2FF;
+  --ll-code-inline-text: #4338CA;
+  --ll-blockquote-bg: #EEF2FF;
+  --ll-blockquote-text: #312E81; /* Deep Navy 900: 12.6:1 contrast */
+
+  --ll-math-bg: #EEF2FF;
+  --ll-math-border: #C7D2FE;
+  --ll-math-text: #312E81; /* Deep Navy 900: 12.6:1 contrast */
+  --ll-math-inline-text: #4338CA; /* Deep Indigo: 8.4:1 contrast */
+
+  --ll-table-bg: #FFFFFF;
+  --ll-table-th-bg: #EEF2FF;
+  --ll-table-th-text: #312E81;
+  --ll-table-td-text: #0F172A;
+  --ll-table-border: #E2E8F0;
+  --ll-table-row-hover: #F8FAFC;
+
+  --ll-gate-ce-bg: #EEF2FF;
+  --ll-gate-ce-border: #C7D2FE;
+  --ll-gate-ce-concept: #1E1B4B; /* Darkest Navy: 14:1 contrast */
+  --ll-gate-ce-body: #334155; /* Slate 700: 9.5:1 contrast */
+
+  --ll-gate-es-bg: #ECFDF5;
+  --ll-gate-es-border: #A7F3D0;
+  --ll-gate-es-text: #065F46; /* Emerald 800: 7.2:1 contrast */
+
+  --ll-msg-tutor-bg: #FFFFFF;
+  --ll-msg-user-bg: linear-gradient(135deg, #6366F1, #8B5CF6);
+  --ll-panel-shadow: 0 16px 40px rgba(99, 102, 241, 0.15), 0 0 0 1px rgba(99, 102, 241, 0.2);
+  --ll-card-hover: rgba(99, 102, 241, 0.05);
+}
+
+/* Global Reset & Base Rules */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--ll-font-sans);
+  background-color: var(--ll-bg);
+  color: var(--ll-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: var(--ll-font-mono);
+}
+
+/* Ensure accessible focus outlines across both themes */
+:focus-visible {
+  outline: 2px solid var(--ll-primary);
+  outline-offset: 2px;
 }

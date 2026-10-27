@@ -60,8 +60,8 @@ export default function CourseCard({
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: 0.8,
-              color: '#818CF8',
-              background: dark ? 'rgba(99, 102, 241, 0.12)' : 'rgba(99, 102, 241, 0.08)',
+              color: dark ? '#818CF8' : '#4338CA',
+              background: dark ? 'rgba(99, 102, 241, 0.12)' : '#EEF2FF',
               padding: '4px 9px',
               borderRadius: 6,
             }}
@@ -126,7 +126,7 @@ export default function CourseCard({
           </div>
 
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 11, color: '#94A3B8', fontWeight: 600, letterSpacing: 0.5 }}>
+            <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', fontWeight: 600, letterSpacing: 0.5 }}>
               {course.code}
             </div>
             <h3
@@ -148,7 +148,7 @@ export default function CourseCard({
         <p
           style={{
             fontSize: 13,
-            color: dark ? '#94A3B8' : '#64748B',
+            color: dark ? '#94A3B8' : '#334155',
             lineHeight: 1.6,
             margin: '0 0 16px 0',
             minHeight: 58,
@@ -196,7 +196,7 @@ export default function CourseCard({
               marginBottom: 6,
             }}
           >
-            <span style={{ color: dark ? '#94A3B8' : '#64748B' }}>
+            <span style={{ color: dark ? '#94A3B8' : '#475569' }}>
               {isDemo ? 'Status' : 'Progress'}
             </span>
             <span
@@ -241,9 +241,9 @@ export default function CourseCard({
               ? 'linear-gradient(135deg, #6366F1, #8B5CF6)'
               : dark
               ? 'rgba(99, 102, 241, 0.12)'
-              : 'rgba(99, 102, 241, 0.08)',
-            color: isFeatured ? '#FFFFFF' : '#818CF8',
-            border: isFeatured ? 'none' : '1px solid rgba(99, 102, 241, 0.3)',
+              : '#EEF2FF',
+            color: isFeatured ? '#FFFFFF' : (dark ? '#818CF8' : '#4338CA'),
+            border: isFeatured ? 'none' : (dark ? '1px solid rgba(99, 102, 241, 0.3)' : '1px solid #C7D2FE'),
             borderRadius: 10,
             padding: '11px 16px',
             fontFamily: "'DM Sans', sans-serif",

@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function RapidSandFilterDiagram({ dark = true }) {
   const textColor = dark ? '#F1F5F9' : '#0F172A';
-  const subTextColor = dark ? '#94A3B8' : '#64748B';
+  const subTextColor = dark ? '#94A3B8' : '#475569';
   const boxBg = dark ? '#1E293B' : '#F1F5F9';
   const boxBorder = dark ? '#334155' : '#CBD5E1';
 

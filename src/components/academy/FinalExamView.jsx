@@ -98,7 +98,7 @@ export default function FinalExamView({
         <h1 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 26, fontWeight: 800, margin: '0 0 8px 0', color: dark ? '#FFFFFF' : '#0F172A' }}>
           {exam.title}
         </h1>
-        <p style={{ fontSize: 14, color: '#94A3B8', margin: 0, lineHeight: 1.6 }}>
+        <p style={{ fontSize: 14, color: dark ? '#94A3B8' : '#334155', margin: 0, lineHeight: 1.6 }}>
           Covers all 6 course modules. Achieving ≥ 70% qualifies you for the official LearnLoop AI Course Completion Certificate.
         </p>
       </div>
@@ -117,23 +117,23 @@ export default function FinalExamView({
           <h2 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 26, fontWeight: 800, color: examResult.passed ? '#10B981' : '#EF4444', margin: '0 0 8px 0' }}>
             {examResult.passed ? 'Final Examination Passed!' : 'Exam Score Below 70% Passing Standard'}
           </h2>
-          <div style={{ fontSize: 20, fontWeight: 800, margin: '8px 0' }}>
+          <div style={{ fontSize: 20, fontWeight: 800, margin: '8px 0', color: dark ? '#F1F5F9' : '#0F172A' }}>
             Score: {examResult.score} / {examResult.total} ({examResult.percentage}%)
           </div>
 
           {unlockedCert ? (
             <div style={{
-              background: 'rgba(99, 102, 241, 0.15)',
-              border: '1px solid #6366F1',
+              background: dark ? 'rgba(99, 102, 241, 0.15)' : '#EEF2FF',
+              border: dark ? '1px solid #6366F1' : '1px solid #C7D2FE',
               borderRadius: 12,
               padding: '16px 20px',
               maxWidth: 580,
               margin: '16px auto',
-              color: '#E0E7FF'
+              color: dark ? '#E0E7FF' : '#1E1B4B'
             }}>
               <strong>🎉 Certificate Unlocked & Issued!</strong>
               <div style={{ fontSize: 13, marginTop: 4 }}>
-                Certificate ID: <code style={{ color: '#38BDF8', fontWeight: 700 }}>{unlockedCert.id}</code>
+                Certificate ID: <code style={{ color: dark ? '#38BDF8' : '#0369A1', fontWeight: 700 }}>{unlockedCert.id}</code>
               </div>
               <button
                 onClick={handleCertificates}
@@ -250,7 +250,7 @@ export default function FinalExamView({
                         gap: 12
                       }}
                     >
-                      <span style={{ fontWeight: 700, width: 22, color: isOptSelected ? '#6366F1' : '#94A3B8' }}>
+                      <span style={{ fontWeight: 700, width: 22, color: isOptSelected ? '#6366F1' : (dark ? '#94A3B8' : '#64748B') }}>
                         {['A','B','C','D'][optIdx]}.
                       </span>
                       <span style={{ color: dark ? '#E2E8F0' : '#1E293B' }}><FormattedContent inline content={opt} /></span>
@@ -264,9 +264,9 @@ export default function FinalExamView({
                   marginTop: 12,
                   padding: '10px 14px',
                   borderRadius: 8,
-                  background: 'rgba(99, 102, 241, 0.08)',
+                  background: dark ? 'rgba(99, 102, 241, 0.08)' : '#EEF2FF',
                   fontSize: 12,
-                  color: '#A5B4FC',
+                  color: dark ? '#A5B4FC' : '#312E81',
                   lineHeight: 1.5
                 }}>
                   <strong>Explanation:</strong> <FormattedContent inline content={q.explanation} />

@@ -132,7 +132,7 @@ export default function PublicLanding({ dark, onOpenAuth, onExploreCourse, onVer
               onClick={onVerifyCert}
               style={{
                 background: "transparent",
-                color: isDark ? "#94A3B8" : "#64748B",
+                color: isDark ? "#94A3B8" : "#475569",
                 border: "none",
                 fontSize: 14,
                 fontWeight: 600,
@@ -167,7 +167,7 @@ export default function PublicLanding({ dark, onOpenAuth, onExploreCourse, onVer
               <div style={{ fontWeight: 800, fontSize: 14, color: isDark ? "#F1F5F9" : "#0F172A" }}>
                 Core Civil Engineering Curriculum
               </div>
-              <div style={{ fontSize: 12, color: isDark ? "#94A3B8" : "#64748B", marginTop: 4 }}>
+              <div style={{ fontSize: 12, color: isDark ? "#94A3B8" : "#475569", marginTop: 4 }}>
                 Comprehensive Water Supply & Sanitation Engineering: 6 units, 42 planned teaching hours across municipal water supply, hydraulics, and wastewater engineering.
               </div>
             </div>
@@ -184,7 +184,7 @@ export default function PublicLanding({ dark, onOpenAuth, onExploreCourse, onVer
               <div style={{ fontWeight: 800, fontSize: 14, color: isDark ? "#F1F5F9" : "#0F172A" }}>
                 Source B: GATE 2027 ES Alignment
               </div>
-              <div style={{ fontSize: 12, color: isDark ? "#94A3B8" : "#64748B", marginTop: 4 }}>
+              <div style={{ fontSize: 12, color: isDark ? "#94A3B8" : "#475569", marginTop: 4 }}>
                 Integrated Environmental Science & Engineering topics: BOD kinetics, clariflocculation, hydraulics, and sludge management.
               </div>
             </div>
@@ -201,7 +201,7 @@ export default function PublicLanding({ dark, onOpenAuth, onExploreCourse, onVer
               <div style={{ fontWeight: 800, fontSize: 14, color: isDark ? "#F1F5F9" : "#0F172A" }}>
                 Multilingual AI Pedagogics
               </div>
-              <div style={{ fontSize: 12, color: isDark ? "#94A3B8" : "#64748B", marginTop: 4 }}>
+              <div style={{ fontSize: 12, color: isDark ? "#94A3B8" : "#475569", marginTop: 4 }}>
                 Instant explanations in <strong>English, Hindi, Marathi, and Manipuri</strong> using everyday physical engineering analogies.
               </div>
             </div>
@@ -226,7 +226,7 @@ export default function PublicLanding({ dark, onOpenAuth, onExploreCourse, onVer
           >
             How Civil Engineering Students Learn with Us
           </h2>
-          <p style={{ color: isDark ? "#94A3B8" : "#64748B", fontSize: 15, margin: 0 }}>
+          <p style={{ color: isDark ? "#94A3B8" : "#475569", fontSize: 15, margin: 0 }}>
             We move beyond passive lecture videos. LearnLoop enforces active recall and self-explanation.
           </p>
         </div>
@@ -373,13 +373,13 @@ export default function PublicLanding({ dark, onOpenAuth, onExploreCourse, onVer
                 >
                   {mod.title}
                 </h3>
-                <p style={{ fontSize: 13, color: isDark ? "#94A3B8" : "#64748B", margin: "0 0 16px", lineHeight: 1.5 }}>
+                <p style={{ fontSize: 13, color: isDark ? "#94A3B8" : "#334155", margin: "0 0 16px", lineHeight: 1.5 }}>
                   {mod.description}
                 </p>
 
                 {Array.isArray(mod?.lessons) && mod.lessons.length > 0 && (
                   <div style={{ borderTop: `1px solid ${isDark ? "#1E293B" : "#E2E8F0"}`, paddingTop: 12 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: isDark ? "#64748B" : "#94A3B8", marginBottom: 6 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: isDark ? "#94A3B8" : "#475569", marginBottom: 6 }}>
                       FEATURED LESSONS:
                     </div>
                     {mod.lessons.slice(0, 3).map((l) => (
@@ -413,11 +413,11 @@ export default function PublicLanding({ dark, onOpenAuth, onExploreCourse, onVer
           <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 20, fontWeight: 800, marginBottom: 4 }}>
             Learn<span style={{ color: "#6366F1" }}>Loop</span> AI Academy
           </div>
-          <div style={{ fontSize: 12, color: isDark ? "#64748B" : "#94A3B8", fontWeight: 600, letterSpacing: 0.5 }}>
+          <div style={{ fontSize: 12, color: isDark ? "#94A3B8" : "#475569", fontWeight: 600, letterSpacing: 0.5 }}>
             StructaMind · Engineering Minds. Structuring Futures.
           </div>
 
-          <p style={{ fontSize: 12, color: isDark ? "#64748B" : "#94A3B8", lineHeight: 1.6, marginTop: 16 }}>
+          <p style={{ fontSize: 12, color: isDark ? "#94A3B8" : "#475569", lineHeight: 1.6, marginTop: 16 }}>
             Accreditation Disclaimer: This course is designed for undergraduate Civil Engineering students across Indian colleges and universities.
             Curriculum content covers core Civil Engineering water supply and sanitation principles alongside contextual competitive examination preparation (GATE CE & GATE ES).
             Certificates acknowledge completion of LearnLoop AI Academy requirements.

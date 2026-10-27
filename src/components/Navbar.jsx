@@ -245,7 +245,7 @@ export default function Navbar({
                   >
                     {user.name || "Student"}
                   </div>
-                  <div style={{ fontSize: 10, color: "#94A3B8" }}>
+                  <div style={{ fontSize: 10, color: isDark ? "#94A3B8" : "#475569" }}>
                     {user.preferredLanguage ? user.preferredLanguage.toUpperCase() : "EN"} · GATE {user.gateYear || gateYear || "2027"}
                   </div>
                 </div>
@@ -261,7 +261,7 @@ export default function Navbar({
                   padding: "6px 12px",
                   fontSize: 12,
                   fontWeight: 600,
-                  color: isDark ? "#94A3B8" : "#64748B",
+                  color: isDark ? "#94A3B8" : "#475569",
                   cursor: "pointer",
                   fontFamily: "'DM Sans', sans-serif",
                 }}
