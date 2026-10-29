@@ -56,6 +56,7 @@ export default function CourseCatalogueView({
     <div className="ll-academy-container" style={{ paddingBottom: 60 }}>
       {/* Hero Catalogue Header */}
       <div
+        className="ll-catalogue-hero"
         style={{
           background: dark
             ? 'linear-gradient(135deg, #0F172A 0%, #1E1B4B 60%, #172554 100%)'
@@ -91,7 +92,7 @@ export default function CourseCatalogueView({
           <h1
             style={{
               fontFamily: "'Outfit', sans-serif",
-              fontSize: 34,
+              fontSize: 'clamp(24px, 5vw, 34px)',
               fontWeight: 800,
               margin: '0 0 12px 0',
               color: dark ? '#FFFFFF' : '#0F172A',
@@ -339,7 +340,7 @@ export default function CourseCatalogueView({
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 290px), 1fr))',
             gap: 22,
           }}
         >

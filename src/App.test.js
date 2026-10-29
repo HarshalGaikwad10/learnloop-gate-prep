@@ -1060,6 +1060,61 @@ describe('Chatbot Display Modes (Normal, Expanded, Full-Screen)', () => {
     fireEvent.click(fullscreenBtn);
     expect(input.value).toBe('Design 6 slow sand filter beds');
   });
+
+  test('preserves existing AI Tutor messages and answers across normal, expanded, and full-screen modes without disappearance', async () => {
+    const chatService = require('./services/chatService');
+    jest.spyOn(chatService, 'sendChatMessage').mockResolvedValueOnce({
+      reply: '### Gel-Space Ratio Solution\nAccording to **Powers & Brownyard** formula:\n$$V_p = 0.28w_0$$\nCompensating compressive strength is calculated accurately.',
+      model: 'gemini-3.5-flash-lite'
+    });
+
+    render(<Chatbot dark={true} user={{ name: 'Engineer' }} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    const input = screen.getByTestId('chat-input');
+    const sendBtn = screen.getByTestId('chat-send-btn');
+    const panel = screen.getByTestId('chat-panel');
+    const expandBtn = screen.getByTestId('chat-expand-btn');
+    const fullscreenBtn = screen.getByTestId('chat-fullscreen-btn');
+
+    // Send question
+    fireEvent.change(input, { target: { value: 'Explain gel-space ratio' } });
+    fireEvent.click(sendBtn);
+
+    // Wait for AI Tutor reply to render
+    await waitFor(() => {
+      expect(screen.getByText(/Gel-Space Ratio Solution/i)).toBeInTheDocument();
+      expect(screen.getByText(/Powers & Brownyard/i)).toBeInTheDocument();
+    });
+
+    const messagesContainer = screen.getByTestId('chat-messages-container');
+    expect(messagesContainer).toBeInTheDocument();
+
+    // 1. Switch to Expanded Mode
+    fireEvent.click(expandBtn);
+    expect(panel).toHaveClass('mode-expanded');
+    expect(screen.getByText(/Gel-Space Ratio Solution/i)).toBeInTheDocument();
+    expect(screen.getByText(/Powers & Brownyard/i)).toBeInTheDocument();
+    expect(screen.getByTestId('chat-messages-container')).toBeInTheDocument();
+
+    // 2. Switch to Full-Screen Mode
+    fireEvent.click(fullscreenBtn);
+    expect(panel).toHaveClass('mode-fullscreen');
+    expect(screen.getByText(/Gel-Space Ratio Solution/i)).toBeInTheDocument();
+    expect(screen.getByText(/Powers & Brownyard/i)).toBeInTheDocument();
+    expect(screen.getByTestId('chat-messages-container')).toBeInTheDocument();
+
+    // 3. Restore to Normal Mode
+    fireEvent.click(fullscreenBtn);
+    expect(panel).toHaveClass('mode-normal');
+    expect(screen.getByText(/Gel-Space Ratio Solution/i)).toBeInTheDocument();
+    expect(screen.getByText(/Powers & Brownyard/i)).toBeInTheDocument();
+
+    // Verify chatService was only called ONCE for the original send, not on resizes
+    expect(chatService.sendChatMessage).toHaveBeenCalledTimes(1);
+
+    chatService.sendChatMessage.mockRestore();
+  });
 });
 
 describe('Gemini API Authentication & Upstream Error Classification Suite', () => {
@@ -1300,6 +1355,100 @@ describe('Light Mode Readability, Theme Tokens, and Dynamic Theme Switching', ()
     expect(container.textContent).toContain('μ');
   });
 });
+
+describe('Mobile Responsiveness and Full-Screen Chatbot Layout Suite', () => {
+  const Navbar = require('./components/Navbar').default;
+
+  test('Auth screen renders responsive container with flexible hero and form panels', () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    const { container } = render(<App initialScreen="auth" />);
+
+    // Assert responsive layout container classes exist
+    const authContainer = container.querySelector('.ll-auth-container');
+    expect(authContainer).toBeInTheDocument();
+
+    const hero = container.querySelector('.ll-auth-hero');
+    expect(hero).toBeInTheDocument();
+
+    const formPanel = container.querySelector('.ll-auth-form-panel');
+    expect(formPanel).toBeInTheDocument();
+
+    // Verify all 3 GATE years are present and accessible
+    expect(screen.getByText('GATE 2026')).toBeInTheDocument();
+    expect(screen.getByText('GATE 2027')).toBeInTheDocument();
+    expect(screen.getByText('GATE 2028')).toBeInTheDocument();
+  });
+
+  test('Navbar renders mobile toggle button and opens collapsible navigation drawer', () => {
+    const setActiveTab = jest.fn();
+    const mockUser = { id: 'usr-1', name: 'Priya Patel', email: 'priya@iitb.ac.in', gateYear: 2027 };
+
+    render(
+      <Navbar
+        dark={true}
+        setDark={jest.fn()}
+        activeTab="academy"
+        setActiveTab={setActiveTab}
+        user={mockUser}
+        setUser={jest.fn()}
+        onOpenAuth={jest.fn()}
+        gateYear={2027}
+      />
+    );
+
+    const mobileToggle = screen.getByLabelText('Toggle navigation menu');
+    expect(mobileToggle).toBeInTheDocument();
+    expect(mobileToggle).toHaveAttribute('aria-expanded', 'false');
+
+    // Click toggle to open mobile drawer
+    fireEvent.click(mobileToggle);
+    expect(mobileToggle).toHaveAttribute('aria-expanded', 'true');
+
+    // Mobile drawer should be open and display tabs
+    const practiceButtons = screen.getAllByText('GATE Practice');
+    expect(practiceButtons.length).toBeGreaterThanOrEqual(1);
+
+    // Click on a navigation item from the mobile menu
+    fireEvent.click(practiceButtons[practiceButtons.length - 1]);
+    expect(setActiveTab).toHaveBeenCalledWith('practice');
+    expect(mobileToggle).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  test('Chatbot full-screen mode anchors header, scrollable messages, and bottom composer', () => {
+    const { container } = render(<Chatbot dark={true} />);
+    fireEvent.click(screen.getByTestId('chat-launcher-btn'));
+
+    // Toggle to full-screen mode
+    const fsBtn = screen.getByTestId('chat-fullscreen-btn');
+    fireEvent.click(fsBtn);
+
+    const panel = screen.getByTestId('chat-panel');
+    expect(panel).toHaveClass('mode-fullscreen');
+
+    const header = container.querySelector('.ll-chat-header');
+    expect(header).toBeInTheDocument();
+
+    const messages = container.querySelector('.ll-chat-messages');
+    expect(messages).toBeInTheDocument();
+
+    const inputArea = container.querySelector('.ll-chat-input-area');
+    expect(inputArea).toBeInTheDocument();
+
+    const textarea = screen.getByTestId('chat-input');
+    expect(textarea).toBeInTheDocument();
+
+    // Type a message to ensure composer is functional in full-screen
+    fireEvent.change(textarea, { target: { value: 'Explain BOD kinetics' } });
+    expect(textarea).toHaveValue('Explain BOD kinetics');
+
+    // Step down cleanly with Escape
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(panel).toHaveClass('mode-expanded');
+    expect(textarea).toHaveValue('Explain BOD kinetics');
+  });
+});
+
 
 
 

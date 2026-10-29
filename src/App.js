@@ -804,55 +804,55 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
   }
 
   if(screen==="auth") return (
-    <div style={{...appStyle,display:"flex",minHeight:"100vh"}}>
+    <div className="ll-auth-container" style={{...appStyle}}>
       {/* Left Hero */}
-      <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",padding:48,background:dark?"linear-gradient(135deg,#07090F 0%,#1a1040 60%,#07090F 100%)":"linear-gradient(135deg,#EEF2FF 0%,#E0E7FF 50%,#F0F4FF 100%)",position:"relative",overflow:"hidden"}}>
+      <div className="ll-auth-hero" style={{background:dark?"linear-gradient(135deg,#07090F 0%,#1a1040 60%,#07090F 100%)":"linear-gradient(135deg,#EEF2FF 0%,#E0E7FF 50%,#F0F4FF 100%)"}}>
         <div style={{position:"absolute",inset:0,opacity:0.03,backgroundImage:`repeating-linear-gradient(0deg,${C.primary} 0,${C.primary} 1px,transparent 1px,transparent 48px),repeating-linear-gradient(90deg,${C.primary} 0,${C.primary} 1px,transparent 1px,transparent 48px)`}}/>
-        <div style={{position:"relative",textAlign:"center",maxWidth:420}}>
-          <div style={{display:"flex",justifyContent:"center",marginBottom:28}}>
-            <div style={{background:dark?"rgba(99,102,241,0.1)":"rgba(99,102,241,0.06)",borderRadius:28,padding:24,border:`1px solid ${C.primary}25`}}><Logo size={72}/></div>
+        <div className="ll-auth-hero-inner">
+          <div style={{display:"flex",justifyContent:"center",marginBottom:20}}>
+            <div style={{background:dark?"rgba(99,102,241,0.1)":"rgba(99,102,241,0.06)",borderRadius:24,padding:18,border:`1px solid ${C.primary}25`}}><Logo size={56}/></div>
           </div>
-          <h1 style={{...heading(36),background:`linear-gradient(135deg,${C.primary},${C.purple})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:6}}>LearnLoop</h1>
-          <div style={{fontSize:10,color:th.textDim,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",marginBottom:20}}>INTELLIGENT CONCEPT · AI ACADEMY · STRUCTAMIND</div>
-          <p style={{color:th.textMid,fontSize:15,lineHeight:1.7,marginBottom:28}}>Engineering Minds. Structuring Futures.<br/><strong style={{color:th.text}}>Civil & Environmental Engineering</strong></p>
+          <h1 style={{...heading(32),background:`linear-gradient(135deg,${C.primary},${C.purple})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginBottom:6}}>LearnLoop</h1>
+          <div style={{fontSize:10,color:th.textDim,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:16}}>INTELLIGENT CONCEPT · AI ACADEMY · STRUCTAMIND</div>
+          <p style={{color:th.textMid,fontSize:14,lineHeight:1.6,marginBottom:22}}>Engineering Minds. Structuring Futures.<br/><strong style={{color:th.text}}>Civil & Environmental Engineering</strong></p>
           {/* GATE Countdown — updates live as user picks year on the right */}
-          <div style={{background:dark?"rgba(239,68,68,0.08)":"rgba(239,68,68,0.05)",border:"1px solid rgba(239,68,68,0.2)",borderRadius:14,padding:"16px 20px",marginBottom:24}}>
+          <div style={{background:dark?"rgba(239,68,68,0.08)":"rgba(239,68,68,0.05)",border:"1px solid rgba(239,68,68,0.2)",borderRadius:14,padding:"14px 18px",marginBottom:20}}>
             <div style={{fontSize:10,color:"#EF4444",fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>
               🗓️ {gateYear?`GATE ${gateYear} Countdown`:"Select Your GATE Year →"}
             </div>
             {gateYear?(
               <>
-                <div style={{display:"flex",gap:20,justifyContent:"center"}}>
+                <div style={{display:"flex",gap:16,justifyContent:"center"}}>
                   {[{v:getDaysToGate(gateYear),l:"Days"},{v:getWeeksToGate(gateYear),l:"Weeks"},{v:getMonthsToGate(gateYear),l:"Months"}].map(s=>(
                     <div key={s.l} style={{textAlign:"center"}}>
-                      <div style={{fontFamily:"'Outfit',sans-serif",fontSize:26,fontWeight:900,color:"#EF4444"}}>{s.v}</div>
+                      <div style={{fontFamily:"'Outfit',sans-serif",fontSize:24,fontWeight:900,color:"#EF4444"}}>{s.v}</div>
                       <div style={{fontSize:10,color:th.textDim}}>{s.l}</div>
                     </div>
                   ))}
                 </div>
-                <div style={{fontSize:11,color:th.textDim,marginTop:6}}>Feb 1, {gateYear} — Tentative</div>
+                <div style={{fontSize:11,color:th.textDim,marginTop:4}}>Feb 1, {gateYear} — Tentative</div>
               </>
             ):(
-              <div style={{fontSize:13,color:th.textDim,padding:"6px 0",textAlign:"center"}}>Pick your year on the right to see your countdown</div>
+              <div style={{fontSize:13,color:th.textDim,padding:"6px 0",textAlign:"center"}}>Pick your year below to see your countdown</div>
             )}
           </div>
-          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+          <div style={{display:"flex",flexDirection:"column",gap:8}}>
             {[["🎓","Core Civil Engineering Curriculum with GATE CE & ES Highlights"],["🧠","Multilingual AI Teacher with Concept Checks"],["🏆","Outcome-based verifiable credentials"],["⚡","287 GATE MCQs with AI Coaching"]].map(([i,t])=>(
-              <div key={t} style={{display:"flex",alignItems:"center",gap:10,background:dark?"rgba(99,102,241,0.06)":"rgba(99,102,241,0.04)",borderRadius:8,padding:"10px 14px",border:`1px solid ${C.primary}12`,textAlign:"left"}}>
-                <span style={{fontSize:16}}>{i}</span><span style={{fontSize:13,color:th.textMid}}>{t}</span>
+              <div key={t} style={{display:"flex",alignItems:"center",gap:10,background:dark?"rgba(99,102,241,0.06)":"rgba(99,102,241,0.04)",borderRadius:8,padding:"8px 12px",border:`1px solid ${C.primary}12`,textAlign:"left"}}>
+                <span style={{fontSize:15}}>{i}</span><span style={{fontSize:12.5,color:th.textMid}}>{t}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
       {/* Right Form */}
-      <div style={{width:440,display:"flex",flexDirection:"column",justifyContent:"center",padding:48,background:th.surface,borderLeft:`1px solid ${th.border}`,overflowY:"auto"}}>
-        <div style={{marginBottom:8,display:"flex",gap:10}}>
-          <button onClick={()=>setDark(d=>!d)} style={btnGhost({padding:"6px 14px",fontSize:12,marginBottom:24})}>{dark?"☀️ Light Mode":"🌙 Dark Mode"}</button>
-          <button onClick={()=>{setActiveTab("landing");setScreen("landing");}} style={btnGhost({padding:"6px 14px",fontSize:12,marginBottom:24})}>← Back to Course</button>
+      <div className="ll-auth-form-panel" style={{background:th.surface}}>
+        <div style={{marginBottom:8,display:"flex",gap:10,flexWrap:"wrap"}}>
+          <button onClick={()=>setDark(d=>!d)} style={btnGhost({padding:"6px 14px",fontSize:12,marginBottom:16})}>{dark?"☀️ Light Mode":"🌙 Dark Mode"}</button>
+          <button onClick={()=>{setActiveTab("landing");setScreen("landing");}} style={btnGhost({padding:"6px 14px",fontSize:12,marginBottom:16})}>← Back to Course</button>
         </div>
-        <h2 style={{...heading(28),marginBottom:8}}>{authMode==="login"?"Welcome back":"Create account"}</h2>
-        <p style={{color:th.textMid,fontSize:14,marginBottom:24}}>{authMode==="login"?"Sign in to continue your Civil Engineering coursework":"Enrol free and unlock the 6-module curriculum"}</p>
+        <h2 style={{...heading(26),marginBottom:8}}>{authMode==="login"?"Welcome back":"Create account"}</h2>
+        <p style={{color:th.textMid,fontSize:13.5,marginBottom:20}}>{authMode==="login"?"Sign in to continue your Civil Engineering coursework":"Enrol free and unlock the 6-module curriculum"}</p>
         <div style={{display:"flex",flexDirection:"column",gap:14}}>
 
           {/* ── GATE YEAR PICKER ── */}
@@ -870,11 +870,12 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
                     background:isSelected?`linear-gradient(135deg,${C.primary},${C.purple})`:"transparent",
                     color:isSelected?"#fff":isPast?th.textFaint:th.text,
                     border:`${isSelected?"2px":"1px"} solid ${isSelected?C.primary:isPast?th.textFaint+40:th.border}`,
-                    borderRadius:10, padding:"10px 8px", cursor:isPast?"default":"pointer",
-                    fontFamily:"'Outfit',sans-serif", fontWeight:800, fontSize:15,
+                    borderRadius:10, padding:"8px 4px", cursor:isPast?"default":"pointer",
+                    fontFamily:"'Outfit',sans-serif", fontWeight:800, fontSize:"clamp(12px, 3.5vw, 15px)",
                     transition:"all 0.15s", opacity:isPast?0.35:1,
                     boxShadow:isSelected?`0 4px 16px ${C.primary}30`:"none",
-                    display:"flex",flexDirection:"column",alignItems:"center",gap:2
+                    display:"flex",flexDirection:"column",alignItems:"center",gap:2,
+                    minWidth: 0,
                   }}>
                     <span>GATE {yr}</span>
                     {!isPast&&<span style={{fontSize:9,fontWeight:400,fontFamily:"'DM Sans',sans-serif",opacity:0.75,color:isSelected?"#fff":th.textDim}}>{dDays>0?`${Math.floor(dDays/30)}mo away`:"This Year"}</span>}

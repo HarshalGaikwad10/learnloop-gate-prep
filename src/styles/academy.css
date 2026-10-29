@@ -1072,18 +1072,33 @@ body.light-theme .ll-gate-es-callout,
 @media (max-width: 768px) {
   .ll-academy-container {
     padding: 16px 12px 80px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .ll-catalogue-hero {
+    padding: 24px 16px !important;
+    border-radius: 16px !important;
   }
   .ll-lang-bar {
     flex-direction: column;
     align-items: flex-start;
+    padding: 12px 14px;
   }
   .ll-check-container {
-    padding: 18px 16px;
+    padding: 18px 14px;
   }
   .math-block-container {
     padding: 12px 14px;
     font-size: 14.5px;
     justify-content: flex-start;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ll-table-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .ll-table {
     font-size: 12.5px;
@@ -1091,5 +1106,17 @@ body.light-theme .ll-gate-es-callout,
   .ll-table th, .ll-table td {
     padding: 10px 12px;
   }
+  .ll-process-flow-container {
+    padding: 14px 12px;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ll-visual-learning-container {
+    padding: 16px 12px !important;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
 }
+
 

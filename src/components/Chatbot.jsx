@@ -62,6 +62,8 @@ export default function Chatbot({
   const [dismissedContext, setDismissedContext] = useState(false);
 
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
+  const panelRef = useRef(null);
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
   const abortControllerRef = useRef(null);
@@ -77,12 +79,30 @@ export default function Chatbot({
     };
   }, []);
 
-  // Auto-scroll on new messages
+  // Auto-scroll within messages container only on new messages or loading updates (never on mode resize)
   useEffect(() => {
-    if (isOpen && typeof messagesEndRef.current?.scrollIntoView === 'function') {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (isOpen) {
+      if (messagesContainerRef.current) {
+        if (typeof messagesContainerRef.current.scrollTo === 'function') {
+          messagesContainerRef.current.scrollTo({
+            top: messagesContainerRef.current.scrollHeight,
+            behavior: 'smooth'
+          });
+        } else {
+          messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
+      } else if (typeof messagesEndRef.current?.scrollIntoView === 'function') {
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
     }
-  }, [messages, loading, isOpen, displayMode]);
+  }, [messages, loading, isOpen]);
+
+  // Keep parent chat-panel container scroll position pinned at 0 so flex layout never shifts
+  useEffect(() => {
+    if (panelRef.current) {
+      panelRef.current.scrollTop = 0;
+    }
+  }, [displayMode]);
 
   // Prevent background body scrolling when chatbot is in expanded or full-screen mode
   useEffect(() => {
@@ -398,6 +418,7 @@ export default function Chatbot({
       {/* ── Chat Panel ── */}
       {isOpen && (
         <div
+          ref={panelRef}
           className={`ll-chat-panel mode-${displayMode}`}
           role="region"
           aria-label="LearnLoop AI Tutor panel"
@@ -487,7 +508,11 @@ export default function Chatbot({
           )}
 
           {/* Messages Area */}
-          <div className="ll-chat-messages" data-testid="chat-messages-container">
+          <div
+            ref={messagesContainerRef}
+            className="ll-chat-messages"
+            data-testid="chat-messages-container"
+          >
             {messages.length === 0 && (
               <div className="ll-welcome-box">
                 <h4 className="ll-welcome-title">

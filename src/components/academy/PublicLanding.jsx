@@ -12,7 +12,7 @@ export default function PublicLanding({ dark, onOpenAuth, onExploreCourse, onVer
         style={{
           position: "relative",
           overflow: "hidden",
-          padding: "70px 24px 90px",
+          padding: "clamp(40px, 8vw, 70px) 16px clamp(48px, 10vw, 90px)",
           background: isDark
             ? "linear-gradient(180deg, #07090F 0%, #0F1422 100%)"
             : "linear-gradient(180deg, #F8FAFC 0%, #EEF2FF 100%)",
@@ -148,7 +148,7 @@ export default function PublicLanding({ dark, onOpenAuth, onExploreCourse, onVer
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
               gap: 16,
               maxWidth: 960,
               margin: "0 auto",
@@ -331,7 +331,7 @@ export default function PublicLanding({ dark, onOpenAuth, onExploreCourse, onVer
             </button>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 18 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: 18 }}>
             {(course?.modules || []).map((mod, i) => (
               <div
                 key={mod.id}
