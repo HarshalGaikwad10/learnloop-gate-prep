@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import App from './App';
 import Chatbot from './components/Chatbot';
 
@@ -1446,6 +1446,50 @@ describe('Mobile Responsiveness and Full-Screen Chatbot Layout Suite', () => {
     fireEvent.keyDown(window, { key: 'Escape' });
     expect(panel).toHaveClass('mode-expanded');
     expect(textarea).toHaveValue('Explain BOD kinetics');
+  });
+
+  test('CourseCatalogueView renders responsive metrics grid and category filter pills container', () => {
+    const CourseCatalogueView = require('./components/academy/CourseCatalogueView').default;
+    const { civilEngineeringCatalogue } = require('./data/courses/coursesCatalogueData');
+    const { container } = render(
+      <CourseCatalogueView
+        courses={civilEngineeringCatalogue}
+        dark={true}
+        onSelectCourse={jest.fn()}
+      />
+    );
+
+    const statsGrid = container.querySelector('.ll-catalogue-stats');
+    expect(statsGrid).toBeInTheDocument();
+    expect(container.querySelectorAll('.ll-stat-item').length).toBe(4);
+
+    const categoryPills = container.querySelector('.ll-category-pills');
+    expect(categoryPills).toBeInTheDocument();
+    expect(within(categoryPills).getByText('Environmental Engineering')).toBeInTheDocument();
+    expect(within(categoryPills).getByText('Structural Engineering')).toBeInTheDocument();
+  });
+
+  test('Closed Chatbot applies .is-closed state class and renders responsive launcher button', () => {
+    const { container } = render(<Chatbot dark={true} />);
+    const root = screen.getByTestId('chatbot-root');
+    expect(root).toHaveClass('is-closed');
+    expect(root).not.toHaveClass('is-open');
+
+    const launcherText = container.querySelector('.ll-launcher-text');
+    expect(launcherText).toBeInTheDocument();
+    expect(launcherText).toHaveTextContent('Ask AI Tutor');
+  });
+
+  test('ProfileView renders responsive 2-column personal information grid', () => {
+    const ProfileView = require('./components/academy/ProfileView').default;
+    const mockUser = { id: 'prof-1', name: 'Vikram Mehta', email: 'vikram@iitd.ac.in', gateYear: 2027 };
+    const { container } = render(
+      <ProfileView user={mockUser} dark={true} onLogout={jest.fn()} />
+    );
+
+    const grid2Col = container.querySelector('.ll-profile-grid-2col');
+    expect(grid2Col).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Vikram Mehta')).toBeInTheDocument();
   });
 });
 

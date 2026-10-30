@@ -298,10 +298,10 @@ code {
   gap: 12px;
 }
 
-.ll-nav-mobile-bar {
+.ll-nav-mobile-toggle {
   display: none;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
 }
 
 .ll-nav-mobile-drawer {
@@ -332,8 +332,99 @@ code {
   .ll-nav-right-desktop {
     display: none !important;
   }
-  .ll-nav-mobile-bar {
-    display: flex !important;
+  .ll-nav-mobile-toggle {
+    display: inline-flex !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .ll-theme-label {
+    display: none !important;
+  }
+  .ll-theme-toggle-btn {
+    padding: 7px 10px !important;
+    border-radius: 18px !important;
+    min-width: 36px;
+    min-height: 36px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .ll-header-wrap {
+    padding: 0 12px !important;
+  }
+  .ll-header-wrap > div {
+    height: 58px !important;
+  }
+  .ll-nav-logo {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 16px !important;
+    border-radius: 9px !important;
+  }
+  .ll-nav-brand-title {
+    font-size: 17px !important;
+  }
+  .ll-nav-brand-badge {
+    font-size: 9px !important;
+    padding: 1px 5px !important;
+  }
+  .ll-nav-brand-group {
+    gap: 10px !important;
+  }
+}
+
+/* ─── APP-WIDE RESPONSIVE UTILITIES & GRIDS ───────────────────────────── */
+.ll-profile-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.ll-planner-countdown-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+.ll-planner-status-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 768px) {
+  .ll-planner-countdown-row {
+    grid-template-columns: 1fr !important;
+  }
+  .ll-planner-status-row {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .ll-planner-container {
+    padding: 20px 14px 100px !important;
+  }
+  .ll-dashboard-container {
+    padding: 20px 14px 100px !important;
+  }
+  .ll-dashboard-banner {
+    padding: 20px 16px !important;
+    border-radius: 16px !important;
+  }
+  .ll-overview-hero {
+    padding: 22px 16px !important;
+    border-radius: 16px !important;
+  }
+  .ll-profile-container {
+    padding: 20px 14px 100px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .ll-profile-grid-2col {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  .ll-profile-card {
+    padding: 20px 16px !important;
+    border-radius: 14px !important;
   }
 }
 

@@ -1068,16 +1068,52 @@ body.light-theme .ll-gate-es-callout,
   color: #166534;
 }
 
+/* ─── CATALOGUE METRICS & CATEGORY FILTERS ─────────────────────────────────── */
+.ll-catalogue-stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ll-stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.ll-stat-divider {
+  width: 1px;
+  height: 32px;
+}
+
+.ll-category-pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
 /* ─── MOBILE RESPONSIVENESS ─────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .ll-academy-container {
-    padding: 16px 12px 80px;
+    padding: 16px 12px 100px !important;
     width: 100%;
     box-sizing: border-box;
   }
   .ll-catalogue-hero {
     padding: 24px 16px !important;
     border-radius: 16px !important;
+  }
+  .ll-category-pills {
+    flex-wrap: wrap !important;
+    overflow-x: visible !important;
+    gap: 8px !important;
+    padding-bottom: 0 !important;
+  }
+  .ll-category-pills button {
+    flex: 0 0 auto !important;
+    font-size: 12px !important;
+    padding: 7px 13px !important;
   }
   .ll-lang-bar {
     flex-direction: column;
@@ -1116,6 +1152,34 @@ body.light-theme .ll-gate-es-callout,
     padding: 16px 12px !important;
     max-width: 100%;
     box-sizing: border-box;
+  }
+}
+
+@media (max-width: 640px) {
+  .ll-catalogue-stats {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px 12px !important;
+  }
+  .ll-stat-divider {
+    display: none !important;
+  }
+  .ll-stat-item {
+    background: rgba(99, 102, 241, 0.06);
+    border: 1px solid var(--ll-border, #1E293B);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .ll-course-showcase-card {
+    padding: 18px 16px !important;
+    border-radius: 14px !important;
+  }
+  .ll-card-desc {
+    min-height: auto !important;
+    margin-bottom: 12px !important;
+  }
+  .ll-cert-card {
+    padding: 20px 16px !important;
   }
 }
 

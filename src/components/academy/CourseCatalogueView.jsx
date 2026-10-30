@@ -115,30 +115,28 @@ export default function CourseCatalogueView({
 
           {/* Quick Metrics Bar */}
           <div
+            className="ll-catalogue-stats"
             style={{
-              display: 'flex',
-              gap: 20,
-              flexWrap: 'wrap',
               borderTop: `1px solid ${dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'}`,
               paddingTop: 18,
             }}
           >
-            <div>
+            <div className="ll-stat-item">
               <div style={{ fontSize: 20, fontWeight: 800, color: '#818CF8' }}>10</div>
               <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', fontWeight: 600 }}>Disciplines</div>
             </div>
-            <div style={{ width: 1, background: dark ? '#334155' : '#CBD5E1' }} />
-            <div>
+            <div className="ll-stat-divider" style={{ width: 1, background: dark ? '#334155' : '#CBD5E1' }} />
+            <div className="ll-stat-item">
               <div style={{ fontSize: 20, fontWeight: 800, color: '#10B981' }}>417</div>
               <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', fontWeight: 600 }}>Planned Hours</div>
             </div>
-            <div style={{ width: 1, background: dark ? '#334155' : '#CBD5E1' }} />
-            <div>
+            <div className="ll-stat-divider" style={{ width: 1, background: dark ? '#334155' : '#CBD5E1' }} />
+            <div className="ll-stat-item">
               <div style={{ fontSize: 20, fontWeight: 800, color: '#F59E0B' }}>52</div>
               <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', fontWeight: 600 }}>Modules</div>
             </div>
-            <div style={{ width: 1, background: dark ? '#334155' : '#CBD5E1' }} />
-            <div>
+            <div className="ll-stat-divider" style={{ width: 1, background: dark ? '#334155' : '#CBD5E1' }} />
+            <div className="ll-stat-item">
               <div style={{ fontSize: 20, fontWeight: 800, color: '#6366F1' }}>1 Active Pilot</div>
               <div style={{ fontSize: 11, color: dark ? '#94A3B8' : '#475569', fontWeight: 600 }}>Interactive System</div>
             </div>
@@ -212,11 +210,8 @@ export default function CourseCatalogueView({
 
         {/* Category Pills */}
         <div
+          className="ll-category-pills"
           style={{
-            display: 'flex',
-            gap: 8,
-            overflowX: 'auto',
-            paddingBottom: 4,
             scrollbarWidth: 'thin',
           }}
         >

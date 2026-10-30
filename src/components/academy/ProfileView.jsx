@@ -33,6 +33,7 @@ export default function ProfileView({ user, setUser, dark, onLogout }) {
 
   return (
     <div
+      className="ll-profile-container"
       style={{
         maxWidth: 900,
         margin: "0 auto",
@@ -76,6 +77,7 @@ export default function ProfileView({ user, setUser, dark, onLogout }) {
 
       {/* Main Settings Card */}
       <div
+        className="ll-profile-card"
         style={{
           background: isDark ? "#111827" : "#FFFFFF",
           border: `1px solid ${isDark ? "#1E293B" : "#E2E8F0"}`,
@@ -96,7 +98,7 @@ export default function ProfileView({ user, setUser, dark, onLogout }) {
           Personal & Academic Information
         </h3>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
+        <div className="ll-profile-grid-2col" style={{ gap: 20, marginBottom: 20 }}>
           <div>
             <label
               style={{

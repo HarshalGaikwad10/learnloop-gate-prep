@@ -146,6 +146,7 @@ export default function CourseCard({
 
         {/* Short Description */}
         <p
+          className="ll-card-desc"
           style={{
             fontSize: 13,
             color: dark ? '#94A3B8' : '#334155',

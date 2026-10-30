@@ -46,10 +46,12 @@ export default function Navbar({
       >
         {/* Brand & Tagline */}
         <div
+          className="ll-nav-brand-group"
           style={{ display: "flex", alignItems: "center", gap: 14, cursor: "pointer" }}
           onClick={() => setActiveTab(user ? "academy" : "landing")}
         >
           <div
+            className="ll-nav-logo"
             style={{
               width: 40,
               height: 40,
@@ -71,6 +73,7 @@ export default function Navbar({
           <div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
               <span
+                className="ll-nav-brand-title"
                 style={{
                   fontFamily: "'Outfit', sans-serif",
                   fontSize: 20,
@@ -82,6 +85,7 @@ export default function Navbar({
                 Learn<span style={{ color: "#6366F1" }}>Loop</span>
               </span>
               <span
+                className="ll-nav-brand-badge"
                 style={{
                   fontSize: 10,
                   fontWeight: 700,
@@ -190,6 +194,7 @@ export default function Navbar({
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {/* Theme toggle — shared across desktop and mobile */}
           <button
+            className="ll-theme-toggle-btn"
             onClick={() => setDark(!isDark)}
             aria-label="Toggle dark/light theme"
             style={{
@@ -207,7 +212,7 @@ export default function Navbar({
             }}
           >
             <span>{isDark ? "☀️" : "🌙"}</span>
-            <span style={{ fontSize: 11, fontWeight: 600 }}>{isDark ? "Light" : "Dark"}</span>
+            <span className="ll-theme-label" style={{ fontSize: 11, fontWeight: 600 }}>{isDark ? "Light" : "Dark"}</span>
           </button>
 
           {/* Desktop Right actions */}
@@ -325,13 +330,11 @@ export default function Navbar({
               background: isDark ? "#182030" : "#F1F5F9",
               border: `1px solid ${isDark ? "#253352" : "#CBD5E1"}`,
               borderRadius: 8,
-              padding: "6px 11px",
+              padding: "7px 12px",
               cursor: "pointer",
-              fontSize: 16,
+              fontSize: 18,
               color: isDark ? "#F1F5F9" : "#0F172A",
-              display: "none",
-              alignItems: "center",
-              justifyContent: "center",
+              lineHeight: 1,
             }}
           >
             {mobileMenuOpen ? "✕" : "☰"}

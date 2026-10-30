@@ -1283,8 +1283,8 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
     return(
       <div style={appStyle}>
         <Nav back={()=>setScreen("dashboard")} sub="Study Planner"/>
-        <div style={{maxWidth:980,margin:"0 auto",padding:"32px 24px"}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:28}}>
+        <div className="ll-planner-container" style={{maxWidth:980,margin:"0 auto",padding:"32px 24px"}}>
+          <div className="ll-planner-header" style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:28,flexWrap:"wrap",gap:16}}>
             <div>
               <h1 style={{...heading(28),marginBottom:6}}>GATE {yr} Study Planner</h1>
               <div style={{display:"flex",alignItems:"center",gap:10,marginTop:4}}>
@@ -1315,11 +1315,11 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
           </div>
 
           {/* Countdown + Calendar Row */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16,marginBottom:24}}>
+          <div className="ll-planner-countdown-row" style={{gap:16,marginBottom:24}}>
             {/* Big countdown */}
-            <div style={cardStyle({borderColor:"#EF444430",background:dark?"rgba(239,68,68,0.05)":"rgba(239,68,68,0.03)",gridColumn:"span 2"})}>
+            <div style={cardStyle({borderColor:"#EF444430",background:dark?"rgba(239,68,68,0.05)":"rgba(239,68,68,0.03)"})}>
               <div style={{fontSize:11,color:"#EF4444",fontWeight:700,textTransform:"uppercase",letterSpacing:1.5,marginBottom:12}}>🗓️ GATE {yr} — February 1, {yr} (Tentative)</div>
-              <div style={{display:"flex",gap:32,alignItems:"center",marginBottom:16}}>
+              <div style={{display:"flex",gap:32,alignItems:"center",marginBottom:16,flexWrap:"wrap"}}>
                 {[{v:days,l:"Days Remaining"},{v:weeks,l:"Weeks Left"},{v:months,l:"Months Left"}].map(s=>(
                   <div key={s.l}>
                     <div style={{fontFamily:"'Outfit',sans-serif",fontSize:48,fontWeight:900,color:"#EF4444",lineHeight:1}}>{s.v}</div>
@@ -1355,7 +1355,7 @@ Generate exactly 8 weeks of plan. Prioritize high-decay and unattempted topics. 
           </div>
 
           {/* Current Status Cards */}
-          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12,marginBottom:24}}>
+          <div className="ll-planner-status-row" style={{gap:12,marginBottom:24}}>
             {[
               {label:"Not Attempted",value:notAttempted.length,color:th.textDim,icon:"📋"},
               {label:"High Decay",value:weakTopics.length,color:"#EF4444",icon:"🔴"},

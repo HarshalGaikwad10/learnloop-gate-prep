@@ -102,6 +102,7 @@ export default function CourseOverview({
 
       {/* Course Header Banner */}
       <div
+        className="ll-overview-hero"
         style={{
           background: dark
             ? 'linear-gradient(135deg, #111827 0%, #1E1B4B 100%)'

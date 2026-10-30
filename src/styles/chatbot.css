@@ -14,8 +14,8 @@
 .ll-chatbot-root {
   font-family: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  right: 20px;
   z-index: 9999;
 }
 
@@ -1338,15 +1338,28 @@ body.light-theme .ll-error-banner {
 
 /* ─── RESPONSIVE (MOBILE & TABLET) ────────────────────────────────────────── */
 @media (max-width: 640px) {
-  .ll-chatbot-root:not(.mode-fullscreen):not(.mode-expanded) {
-    bottom: 12px;
+  .ll-chatbot-root.is-closed {
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    right: 14px;
+    left: auto;
+  }
+
+  .ll-chatbot-root.is-open:not(.mode-fullscreen):not(.mode-expanded) {
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     right: 12px;
     left: 12px;
   }
 
+  .ll-chat-launcher {
+    padding: 10px 16px 10px 12px;
+    font-size: 13px;
+    border-radius: 24px;
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+  }
+
   .ll-chat-panel:not(.mode-fullscreen):not(.mode-expanded) {
     position: fixed;
-    bottom: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     right: 12px;
     left: 12px;
     width: auto;
@@ -1413,6 +1426,22 @@ body.light-theme .ll-error-banner {
 
   .ll-chat-backdrop {
     display: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .ll-chatbot-root.is-closed {
+    right: 10px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+  .ll-chat-launcher {
+    padding: 8px 12px 8px 10px;
+    font-size: 12px;
+    gap: 6px;
+  }
+  .ll-launcher-icon-wrap {
+    width: 24px;
+    height: 24px;
   }
 }
 

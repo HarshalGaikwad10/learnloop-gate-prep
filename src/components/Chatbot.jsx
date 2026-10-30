@@ -385,7 +385,7 @@ export default function Chatbot({
 
   return (
     <div
-      className={`ll-chatbot-root ${dark ? 'dark' : 'light'} mode-${displayMode}`}
+      className={`ll-chatbot-root ${dark ? 'dark' : 'light'} mode-${displayMode} ${isOpen ? 'is-open' : 'is-closed'}`}
       data-testid="chatbot-root"
     >
       {/* ── Backdrop Overlay for Expanded Mode ── */}
@@ -411,7 +411,7 @@ export default function Chatbot({
             <span style={{ fontSize: 18, zIndex: 1 }}>💬</span>
             <span className="ll-launcher-badge" />
           </div>
-          <span>Ask AI Tutor</span>
+          <span className="ll-launcher-text">Ask AI Tutor</span>
         </button>
       )}
 

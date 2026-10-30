@@ -137,7 +137,7 @@ export default function CertificateView({
           </h2>
 
           {userCerts.map(cert => (
-            <div key={cert.id} style={{
+            <div key={cert.id} className="ll-cert-card" style={{
               background: dark ? 'radial-gradient(circle at 50% 30%, #151C2C 0%, #0A0D14 100%)' : '#FFFFFF',
               border: '2px solid #6366F1',
               borderRadius: 20,

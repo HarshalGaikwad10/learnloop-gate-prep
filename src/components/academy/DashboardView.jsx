@@ -62,6 +62,7 @@ export default function DashboardView({
 
   return (
     <div
+      className="ll-dashboard-container"
       style={{
         maxWidth: 1200,
         margin: "0 auto",
@@ -71,6 +72,7 @@ export default function DashboardView({
     >
       {/* Welcome Banner */}
       <div
+        className="ll-dashboard-banner"
         style={{
           background: isDark
             ? "linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.08) 100%)"
